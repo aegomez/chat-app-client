@@ -1,0 +1,30 @@
+.navbar-spaced {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+.form-big {
+  margin: 20px auto;
+  max-width: 500px;
+}
+.app.is-fullheight,
+.columns.is-fullheight,
+.columns.is-fullheight > .column {
+  min-height: 100vh;
+  /* max-height: 100vh; */
+}
+.dropdown.is-fullwidth,
+/* .is-fullwidth > .dropdown-menu, */
+.is-fullwidth > .dropdown-trigger {
+  width: 100%;
+}
+.menu.is-dark .menu-label,
+.menu.is-dark .menu-list a:not(:hover) {
+  color: hsl(0, 0%, 96%);
+}
+/* span .svg-inline--fa {
+  margin-right: 0.5rem;
+} */
+.menu-list a.media {
+  align-items: center;
+  display: flex;
+}

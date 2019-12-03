@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "jsx": "react",
+    "outDir": "./build",
+    "rootDir": "./src",
+    "removeComments": true,
+    "importHelpers": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@api/*": ["api/*"],
+      "@store/*": ["store/*"]
+    }
+  },
+  "include": [
+    "./src"
+  ]
+}
