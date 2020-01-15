@@ -10,26 +10,26 @@ import {
 // Async action creators
 
 export const loginUser = createAsyncAction(
-  'LOGIN_USER_REQUEST',
-  'LOGIN_USER_SUCCESS',
-  'LOGIN_USER_FAILURE'
+  'auth/loginUser/request',
+  'auth/loginUser/success',
+  'auth/loginUser/failure'
 )<LoginUserSchema, undefined, LoginUserErrors>();
 
 export const registerUser = createAsyncAction(
-  'REGISTER_USER_REQUEST',
-  'REGISTER_USER_SUCCESS',
-  'REGISTER_USER_FAILURE'
+  'auth/registerUser/request',
+  'auth/registerUser/success',
+  'auth/registerUser/failure'
 )<RegisterUserSchema, undefined, RegisterUserErrors>();
 
 export const logoutUser = createAsyncAction(
-  'LOGOUT_USER_REQUEST',
-  'LOGOUT_USER_SUCCESS',
-  'LOGOUT_USER_FAILURE'
+  'auth/logoutUser/request',
+  'auth/logoutUser/success',
+  'auth/logoutUser/failure'
 )<undefined, undefined, undefined>();
 
 // Standard action creators
 
-export const resetErrors = createAction('RESET_AUTH_ERRORS')<undefined>();
-export const showRegisterSuccess = createAction('SHOW_SUCCESS_MODAL')<
+export const resetErrors = createAction('auth/resetErrors')<undefined>();
+export const showRegisterSuccess = createAction('auth/showRegisterSuccess')<
   boolean
 >();
