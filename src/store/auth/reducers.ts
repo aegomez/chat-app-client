@@ -7,7 +7,7 @@ import {
   resetErrors,
   showRegisterSuccess
 } from './actions';
-import { getLoggedInFlag } from '../../services/storage';
+import { getLoggedInFlag } from '@api/browser/storage';
 import { RegisterUserErrors, LoginUserErrors } from '@api/auth';
 
 const initialState = {

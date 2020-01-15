@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import { Dashboard, Landing, Login, Register } from './components/views';
 import { getIsAuthenticated } from './store/auth/selectors';
-import { hideMainNavbar, unhideMainNavbar } from './services/dom';
+import { hideMainNavbar, unhideMainNavbar } from '@api/browser/dom';
 
 const PublicRoute: React.FC = () => {
   useEffect(() => {

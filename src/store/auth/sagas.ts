@@ -10,7 +10,7 @@ import {
 } from './actions';
 import { setRedirectToLogin } from '../routing/actions';
 import * as authApi from '@api/auth';
-import { setLoggedInFlag, clearLoggedInFlag } from '../../services/storage';
+import { setLoggedInFlag, clearLoggedInFlag } from '@api/browser/storage';
 
 function* registerUserSaga(
   action: ReturnType<typeof registerUser.request>
