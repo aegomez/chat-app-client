@@ -39,26 +39,18 @@ const updateUserPublicNameQuery = /* GraphQL */ `
 
 /// ----- API Abstractions ----- ///
 
-export function updateUserAvatar(variables: {
-  input: string;
-}): SuccessResponse {
-  return request(USER_API, updateUserAvatarQuery, variables);
+export function updateUserAvatar(input: string): SuccessResponse {
+  return request(USER_API, updateUserAvatarQuery, { input });
 }
 
-export function updateUserConnected(variables: {
-  status: boolean;
-}): SuccessResponse {
-  return request(USER_API, updateUserConnectedQuery, variables);
+export function updateUserConnected(status: boolean): SuccessResponse {
+  return request(USER_API, updateUserConnectedQuery, { status });
 }
 
-export function updateUserLanguage(variables: {
-  newLanguage: UserLanguage;
-}): SuccessResponse {
-  return request(USER_API, updateUserLanguageQuery, variables);
+export function updateUserLanguage(newLanguage: UserLanguage): SuccessResponse {
+  return request(USER_API, updateUserLanguageQuery, { newLanguage });
 }
 
-export function updateUserPublicName(variables: {
-  input: string;
-}): SuccessResponse {
-  return request(USER_API, updateUserPublicNameQuery, variables);
+export function updateUserPublicName(input: string): SuccessResponse {
+  return request(USER_API, updateUserPublicNameQuery, { input });
 }

@@ -3,15 +3,19 @@
 export type ContactStatus = 'accepted' | 'blocked' | 'pending';
 export type UserLanguage = 'en' | 'es';
 
-interface WithSuccess {
+export interface WithSuccess {
   success: boolean;
+}
+export interface CreatedGroupIds {
+  groupId: string | null;
+  conversation: string | null;
 }
 export type SuccessResponse = Promise<WithSuccess>;
 
 /// ----- Users DB Schemas ----- ///
 
 // Public user properties visible to contacts
-interface PartialUserSchema {
+export interface PartialUserSchema {
   _id: string;
   avatar: string;
   connected: string;
@@ -29,8 +33,7 @@ interface GroupSchema {
 }
 
 // Public + private properties
-interface UserSchema extends PartialUserSchema {
-  _id: never;
+export interface UserSchema extends PartialUserSchema {
   contacts: {
     ref: PartialUserSchema;
     conversation: string;
@@ -53,14 +56,26 @@ export type UserProfileResponse = Promise<
 
 /// ----- Users API Mutations ----- ///
 
+// Contacts: Input arguments types
+export interface UpdateContactArgs {
+  targetId: string;
+  newStatus: ContactStatus;
+}
+// Contacts: Return types
 export type AddContactResponse = Promise<
   WithSuccess & {
     profile: PartialUserSchema;
   }
 >;
 
-export type CreatedGroupIds = {
-  groupId: string | null;
-  conversation: string | null;
-};
+// Groups: Input arguments types
+export interface CreateGroupArgs {
+  name: string;
+  avatar: string;
+}
+export interface UpdateGroupArgs {
+  groupId: string;
+  userId: string;
+}
+// Groups: Return types
 export type CreateGroupResponse = Promise<WithSuccess & CreatedGroupIds>;

@@ -1,7 +1,11 @@
 import { request } from 'graphql-request';
 
 import { USER_API } from '../queries';
-import { AddContactResponse, SuccessResponse, ContactStatus } from '../types';
+import {
+  AddContactResponse,
+  SuccessResponse,
+  UpdateContactArgs
+} from '../types';
 
 /// ----- GraphQL Template Strings ----- ///
 
@@ -32,19 +36,14 @@ const updateContactQuery = /* GraphQL */ `
 
 /// ----- API Abstractions ----- ///
 
-export function addContact(variables: {
-  contactName: string;
-}): AddContactResponse {
-  return request(USER_API, addContactQuery, variables);
+export function addContact(contactName: string): AddContactResponse {
+  return request(USER_API, addContactQuery, { contactName });
 }
 
-export function deleteContact(variables: { input: string }): SuccessResponse {
-  return request(USER_API, deleteContactQuery, variables);
+export function deleteContact(input: string): SuccessResponse {
+  return request(USER_API, deleteContactQuery, { input });
 }
 
-export function updateContact(variables: {
-  targetId: string;
-  newStatus: ContactStatus;
-}): SuccessResponse {
+export function updateContact(variables: UpdateContactArgs): SuccessResponse {
   return request(USER_API, updateContactQuery, variables);
 }

@@ -1,7 +1,12 @@
 import request from 'graphql-request';
 
 import { USER_API } from '../queries';
-import { CreateGroupResponse, SuccessResponse } from '../types';
+import {
+  CreateGroupResponse,
+  SuccessResponse,
+  CreateGroupArgs,
+  UpdateGroupArgs
+} from '../types';
 
 /// ----- GraphQL Template Strings ----- ///
 
@@ -33,23 +38,14 @@ const deleteGroupMemberQuery = /* GraphQL */ `
 
 /// ----- API Abstractions ----- ///
 
-export function createGroup(variables: {
-  name: string;
-  avatar: string;
-}): CreateGroupResponse {
+export function createGroup(variables: CreateGroupArgs): CreateGroupResponse {
   return request(USER_API, createGroupQuery, variables);
 }
 
-export function addGroupMember(variables: {
-  groupId: string;
-  userId: string;
-}): SuccessResponse {
+export function addGroupMember(variables: UpdateGroupArgs): SuccessResponse {
   return request(USER_API, addGroupMemberQuery, variables);
 }
 
-export function deleteGroupMember(variables: {
-  groupId: string;
-  userId: string;
-}): SuccessResponse {
+export function deleteGroupMember(variables: UpdateGroupArgs): SuccessResponse {
   return request(USER_API, deleteGroupMemberQuery, variables);
 }
