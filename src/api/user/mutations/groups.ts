@@ -42,10 +42,14 @@ export function createGroup(variables: CreateGroupArgs): CreateGroupResponse {
   return request(USER_API, createGroupQuery, variables);
 }
 
-export function addGroupMember(variables: UpdateGroupArgs): SuccessResponse {
+export function addGroupMember(
+  variables: UpdateGroupArgs
+): SuccessResponse<'addGroupMember'> {
   return request(USER_API, addGroupMemberQuery, variables);
 }
 
-export function deleteGroupMember(variables: UpdateGroupArgs): SuccessResponse {
+export function deleteGroupMember(
+  variables: UpdateGroupArgs
+): SuccessResponse<'deleteGroupMember'> {
   return request(USER_API, deleteGroupMemberQuery, variables);
 }

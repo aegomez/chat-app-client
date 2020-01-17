@@ -40,10 +40,12 @@ export function addContact(contactName: string): AddContactResponse {
   return request(USER_API, addContactQuery, { contactName });
 }
 
-export function deleteContact(input: string): SuccessResponse {
+export function deleteContact(input: string): SuccessResponse<'deleteContact'> {
   return request(USER_API, deleteContactQuery, { input });
 }
 
-export function updateContact(variables: UpdateContactArgs): SuccessResponse {
+export function updateContact(
+  variables: UpdateContactArgs
+): SuccessResponse<'updateContact'> {
   return request(USER_API, updateContactQuery, variables);
 }

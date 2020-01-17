@@ -10,7 +10,10 @@ export interface CreatedGroupIds {
   groupId: string | null;
   conversation: string | null;
 }
-export type SuccessResponse = Promise<WithSuccess>;
+/**
+ * A promise that resolves to `{ [K]: { success: boolean } }`
+ */
+export type SuccessResponse<S extends string> = Promise<Record<S, WithSuccess>>;
 
 /// ----- Users DB Schemas ----- ///
 
@@ -48,11 +51,11 @@ export interface UserSchema extends PartialUserSchema {
 
 /// ----- Users API Queries ----- ///
 
-export type UserProfileResponse = Promise<
-  WithSuccess & {
+export type UserProfileResponse = Promise<{
+  getUserProfile: WithSuccess & {
     profile: UserSchema;
-  }
->;
+  };
+}>;
 
 /// ----- Users API Mutations ----- ///
 
@@ -62,11 +65,11 @@ export interface UpdateContactArgs {
   newStatus: ContactStatus;
 }
 // Contacts: Return types
-export type AddContactResponse = Promise<
-  WithSuccess & {
+export type AddContactResponse = Promise<{
+  addContact: WithSuccess & {
     profile: PartialUserSchema;
-  }
->;
+  };
+}>;
 
 // Groups: Input arguments types
 export interface CreateGroupArgs {
@@ -78,4 +81,6 @@ export interface UpdateGroupArgs {
   userId: string;
 }
 // Groups: Return types
-export type CreateGroupResponse = Promise<WithSuccess & CreatedGroupIds>;
+export type CreateGroupResponse = Promise<{
+  createGroup: WithSuccess & CreatedGroupIds;
+}>;

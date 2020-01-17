@@ -40,7 +40,9 @@ const updateUserPublicNameQuery = /* GraphQL */ `
 
 /// ----- API Abstractions ----- ///
 
-export function updateUserAvatar(input: string): SuccessResponse {
+export function updateUserAvatar(
+  input: string
+): SuccessResponse<'updateUserAvatar'> {
   return request(USER_API, updateUserAvatarQuery, { input });
 }
 
@@ -49,10 +51,14 @@ export function updateUserAvatar(input: string): SuccessResponse {
 //   return request(USER_API, updateUserConnectedQuery, { status });
 // }
 
-export function updateUserLanguage(newLanguage: UserLanguage): SuccessResponse {
+export function updateUserLanguage(
+  newLanguage: UserLanguage
+): SuccessResponse<'updateUserLanguage'> {
   return request(USER_API, updateUserLanguageQuery, { newLanguage });
 }
 
-export function updateUserPublicName(input: string): SuccessResponse {
+export function updateUserPublicName(
+  input: string
+): SuccessResponse<'updateUserPublicName'> {
   return request(USER_API, updateUserPublicNameQuery, { input });
 }
