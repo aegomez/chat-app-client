@@ -13,7 +13,15 @@ const addContactQuery = /* GraphQL */ `
   mutation add($contactName: String) {
     addContact(contactName: $contactName) {
       success
-      profile
+      profile {
+        _id
+        avatar
+        connected
+        lastConnection
+        publicName
+        userName
+      }
+      conversation
     }
   }
 `;

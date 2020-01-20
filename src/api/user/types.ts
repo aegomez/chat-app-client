@@ -6,10 +6,7 @@ export type UserLanguage = 'en' | 'es';
 export interface WithSuccess {
   success: boolean;
 }
-export interface CreatedGroupIds {
-  groupId: string | null;
-  conversation: string | null;
-}
+
 /**
  * A promise that resolves to `{ [K]: { success: boolean } }`
  */
@@ -21,7 +18,7 @@ export type SuccessResponse<S extends string> = Promise<Record<S, WithSuccess>>;
 export interface PartialUserSchema {
   _id: string;
   avatar: string;
-  connected: string;
+  connected: boolean;
   lastConnection: number;
   publicName: string;
   userName: string;
@@ -65,10 +62,12 @@ export interface UpdateContactArgs {
   newStatus: ContactStatus;
 }
 // Contacts: Return types
+export interface NewContactData {
+  profile: PartialUserSchema;
+  conversation: string;
+}
 export type AddContactResponse = Promise<{
-  addContact: WithSuccess & {
-    profile: PartialUserSchema;
-  };
+  addContact: WithSuccess & NewContactData;
 }>;
 
 // Groups: Input arguments types
@@ -81,6 +80,10 @@ export interface UpdateGroupArgs {
   userId: string;
 }
 // Groups: Return types
+export interface NewGroupData {
+  groupId: string;
+  conversation: string;
+}
 export type CreateGroupResponse = Promise<{
-  createGroup: WithSuccess & CreatedGroupIds;
+  createGroup: WithSuccess & NewGroupData;
 }>;
