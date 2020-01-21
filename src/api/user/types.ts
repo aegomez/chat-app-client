@@ -24,7 +24,7 @@ export interface PartialUserSchema {
   userName: string;
 }
 
-interface GroupSchema {
+export interface GroupSchema {
   _id: string;
   avatar: string;
   conversation: string;
@@ -81,9 +81,14 @@ export interface UpdateGroupArgs {
 }
 // Groups: Return types
 export interface NewGroupData {
-  groupId: string;
+  _id: string;
   conversation: string;
 }
 export type CreateGroupResponse = Promise<{
   createGroup: WithSuccess & NewGroupData;
+}>;
+export type AddMemberResponse = Promise<{
+  addGroupMember: WithSuccess & {
+    newMember: PartialUserSchema;
+  };
 }>;
