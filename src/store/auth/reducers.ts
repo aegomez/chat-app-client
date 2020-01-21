@@ -7,6 +7,7 @@ import {
   resetErrors,
   showRegisterSuccess
 } from './actions';
+import { getProfile } from '../profile/actions';
 import { getLoggedInFlag } from '@api/browser/storage';
 import { RegisterUserErrors, LoginUserErrors } from '@api/auth';
 
@@ -36,7 +37,7 @@ export const authReducer = createReducer(initialState)
     ...state,
     errors: action.payload
   }))
-  .handleAction(logoutUser.success, state => ({
+  .handleAction([logoutUser.success, getProfile.failure], state => ({
     ...state,
     isAuthenticated: false,
     successVisible: false,
