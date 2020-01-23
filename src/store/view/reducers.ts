@@ -6,7 +6,7 @@ const initialState = {
   redirectToLogin: false
 };
 
-export const routingReducer = createReducer(initialState).handleAction(
+export const viewReducer = createReducer(initialState).handleAction(
   setRedirectToLogin,
   (state, action) => ({
     ...state,

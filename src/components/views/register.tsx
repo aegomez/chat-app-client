@@ -4,7 +4,7 @@ import { Redirect } from 'react-router';
 
 import { FormContainer, Text, Email, Password } from '../forms';
 import { registerUser } from '@store/auth/actions';
-import { getRedirectToLogin } from '@store/routing/selectors';
+import { getRedirectToLogin } from '@store/view/selectors';
 import { RegisterUserKeys } from '@api/auth';
 
 /* TBR i18n */

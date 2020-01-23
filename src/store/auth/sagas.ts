@@ -8,7 +8,7 @@ import {
   registerUser,
   showRegisterSuccess
 } from './actions';
-import { setRedirectToLogin } from '../routing/actions';
+import { setRedirectToLogin } from '../view/actions';
 import * as authApi from '@api/auth';
 import { setLoggedInFlag, clearLoggedInFlag } from '@api/browser/storage';
 

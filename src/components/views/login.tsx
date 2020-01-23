@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { FormContainer, Text, Password } from '../forms';
 import { loginUser } from '@store/auth/actions';
-import { setRedirectToLogin } from '@store/routing/actions';
+import { setRedirectToLogin } from '@store/view/actions';
 import { LoginUserKeys } from '@api/auth';
 
 /* TBR i18n */

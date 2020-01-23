@@ -5,8 +5,9 @@ type RootReducer = typeof import('./root').rootReducer;
 
 // Import all action types
 type AuthActions = typeof import('./auth/actions');
-type RoutingActions = typeof import('./routing/actions');
+type ChatActions = typeof import('./chat/actions');
 type ProfileActions = typeof import('./profile/actions');
+type ViewActions = typeof import('./view/actions');
 
 /// ----- Global Store Types ----- ///
 
@@ -15,7 +16,7 @@ export type RootState = StateType<RootReducer>;
 
 // Union of all action objects
 export type RootAction = ActionType<
-  AuthActions | RoutingActions | ProfileActions
+  AuthActions | ChatActions | ProfileActions | ViewActions
 >;
 
 // Extend internal types of `typesafe-action` to
