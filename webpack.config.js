@@ -42,7 +42,11 @@ const config = {
       '/api/auth': {
         target:'http://localhost:2000/q',
         pathRewrite: {'^/api/auth': ''}
-      }
+      },
+      '/api/user': {
+        target:'http://localhost:3000/gql',
+        pathRewrite: {'^/api/user': ''}
+      },
     },
     publicPath: '/public'
   }
