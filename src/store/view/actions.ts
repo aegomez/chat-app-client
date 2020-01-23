@@ -11,3 +11,6 @@ export const setRedirectToLogin = createAction('view/setRegisterRedirect')<
 export const makeSettingsVisible = createAction('view/makeSettingsVisible')<
   boolean
 >();
+
+// General request failure action creator
+export const failRequest = createAction('user/any/failure')<boolean>();

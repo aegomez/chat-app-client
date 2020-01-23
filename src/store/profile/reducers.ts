@@ -10,8 +10,7 @@ import {
   deleteGroupMember,
   updateAvatar,
   updatePublicName,
-  updateLanguage,
-  failRequest
+  updateLanguage
 } from './actions';
 import { UserSchema } from '@api/user';
 
@@ -149,11 +148,4 @@ export const profileReducer = createReducer(initialState)
 
   // After a getUserProfile failed request,
   // reset the state.
-  .handleAction(getProfile.failure, () => initialState)
-
-  // After any other request failure,
-  // show a notification.
-  .handleAction(failRequest, (state, action) => ({
-    ...state,
-    failureVisible: action.payload
-  }));
+  .handleAction(getProfile.failure, () => initialState);

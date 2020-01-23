@@ -63,6 +63,3 @@ export const updatePublicName = {
   request: createAction('settings/publicName')<string>(),
   success: createAction('settings/publicName/success')<string>()
 };
-
-// General request failure action creator
-export const failRequest = createAction('user/any/failure')<boolean>();

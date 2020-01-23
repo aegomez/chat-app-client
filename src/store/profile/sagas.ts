@@ -5,12 +5,13 @@ import { call } from 'typed-redux-saga';
 import * as actions from './actions';
 import * as api from '@api/user';
 import { clearLoggedInFlag } from '@api/browser/storage';
+import { failRequest } from '@store/view/actions';
 
 // Show error to user for 3 seconds, then hide it
 function* handleErrorSaga(): SagaIterator {
-  yield put(actions.failRequest(true));
+  yield put(failRequest(true));
   yield delay(3000);
-  yield put(actions.failRequest(false));
+  yield put(failRequest(false));
 }
 
 // User Profile
