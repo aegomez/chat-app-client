@@ -6,7 +6,11 @@ const m = {
   search: 'Search conversation'
 };
 
-const SearchBox: React.FC = () => {
+interface SearchProps {
+  handleChange(event: React.ChangeEvent): void;
+}
+
+const SearchBox: React.FC<SearchProps> = ({ handleChange }) => {
   return (
     <div className="field control has-icons-left">
       <input
@@ -14,6 +18,7 @@ const SearchBox: React.FC = () => {
         name="searchConversation"
         className="input"
         placeholder={m.search}
+        onChange={handleChange}
       />
       <span className="icon is-left has-text-dark">
         <FontAwesomeIcon icon="search" />

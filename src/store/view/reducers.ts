@@ -1,9 +1,17 @@
 import { createReducer } from 'typesafe-actions';
 
-import { setRedirectToLogin, failRequest } from './actions';
+import {
+  setRedirectToLogin,
+  setLogoutVisible,
+  setSettingsVisible,
+  failRequest
+} from './actions';
 
 const initialState = {
-  redirectToLogin: false
+  redirectToLogin: false,
+  failureVisible: false,
+  settingsVisible: false,
+  logoutVisible: false
 };
 
 export const viewReducer = createReducer(initialState)
@@ -16,4 +24,14 @@ export const viewReducer = createReducer(initialState)
   .handleAction(failRequest, (state, action) => ({
     ...state,
     failureVisible: action.payload
+  }))
+  // Show/hide the settings view
+  .handleAction(setSettingsVisible, (state, action) => ({
+    ...state,
+    settingsVisible: action.payload
+  }))
+
+  .handleAction(setLogoutVisible, (state, action) => ({
+    ...state,
+    logoutVisible: action.payload
   }));

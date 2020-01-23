@@ -7,10 +7,11 @@ export const setRedirectToLogin = createAction('view/setRegisterRedirect')<
   boolean
 >();
 
-// Make the settings view visible instead of chat
-export const makeSettingsVisible = createAction('view/makeSettingsVisible')<
-  boolean
->();
+// Show/hide the settings view
+export const setSettingsVisible = createAction('view/showSettings')<boolean>();
+
+// Show/hide the logout confirmation
+export const setLogoutVisible = createAction('view/showLogout')<boolean>();
 
 // General request failure action creator
 export const failRequest = createAction('user/any/failure')<boolean>();

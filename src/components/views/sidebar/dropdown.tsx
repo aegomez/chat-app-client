@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch } from 'react-redux';
+
+import { useTypedSelector } from '../../lib';
+import { setLogoutVisible, setSettingsVisible } from '@store/view/actions';
 
 /* TBD i18n */
 const m = {
@@ -9,9 +13,24 @@ const m = {
 
 const Dropdown: React.FC = () => {
   const [isDropdownActive, setDropdownActive] = useState(false);
+  const avatar = useTypedSelector(state => state.profile.avatar);
+  const publicName = useTypedSelector(state => state.profile.publicName);
+  const dispatch = useDispatch();
 
   function showDropdown(): void {
     setDropdownActive(!isDropdownActive);
+  }
+
+  function showSettings(event: React.MouseEvent): void {
+    event.preventDefault();
+    setDropdownActive(false);
+    dispatch(setSettingsVisible(true));
+  }
+
+  function showLogout(event: React.MouseEvent): void {
+    event.preventDefault();
+    setDropdownActive(false);
+    dispatch(setLogoutVisible(true));
   }
 
   return (
@@ -26,7 +45,7 @@ const Dropdown: React.FC = () => {
           className="button is-fullwidth is-medium is-dark has-text-weight-bold"
           onClick={showDropdown}
         >
-          <span>{'User Name'}</span>
+          <span>{publicName}</span>
           <span className="icon">
             <FontAwesomeIcon icon="angle-down" />
           </span>
@@ -34,24 +53,20 @@ const Dropdown: React.FC = () => {
       </div>
       <div className="dropdown-menu has-text-weight-semibold">
         <div className="dropdown-content has-text-centered">
-          <div className="dropdown-item is-size-5">{'User Name'}</div>
+          <div className="dropdown-item is-size-5">{publicName}</div>
           <div className="dropdown-item">
             <figure className="image is-64x64 is-inline-block">
-              <img
-                src="https://bulma.io/images/placeholders/64x64.png"
-                alt="User avatar"
-                className="is-rounded"
-              />
+              <img src={avatar} alt="User avatar" className="is-rounded" />
             </figure>
           </div>
-          <a className="dropdown-item media is-size-6">
+          <a className="dropdown-item media is-size-6" onClick={showSettings}>
             <span className="icon media-left">
               <FontAwesomeIcon icon="wrench" />
             </span>
             <span className="media-content">{m.settings}</span>
           </a>
-          <a className="dropdown-divider"></a>
-          <a className="dropdown-item media is-size-6">
+          <div className="dropdown-divider"></div>
+          <a className="dropdown-item media is-size-6" onClick={showLogout}>
             <span className="icon media-left">
               <FontAwesomeIcon icon="sign-out-alt" />
             </span>

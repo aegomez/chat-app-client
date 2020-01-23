@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Dropdown } from './dropdown';
 import { SearchBox } from './searchbox';
 import { Controls } from './controls';
-import { Contact } from './contact';
+import { ContactList } from './contacts';
+import { GroupList } from './groups';
 
 /* TBD i18n */
 const m = {
@@ -11,45 +12,30 @@ const m = {
   groupsLabel: 'Groups'
 };
 
-const placeholder = './img/24x24.png';
-
 const Sidebar: React.FC = () => {
+  const [searchFilter, setFilter] = useState('');
+
+  function handleSearchbox(event: React.ChangeEvent<HTMLInputElement>): void {
+    event.preventDefault();
+    setFilter(event.target.value);
+  }
+
   return (
     <aside className="column is-one-quarter has-background-dark">
       <Dropdown />
-      <SearchBox />
-      <div className="menu is-dark">
+      <SearchBox handleChange={handleSearchbox} />
+      <div className="menu is-dark has-text-weight-bold">
         <Controls />
         <p className="menu-label">{m.contactsLabel}</p>
         <ul className="menu-list">
           <li>
-            <ul>
-              <Contact
-                name="Fulanito"
-                avatar={placeholder}
-                isActiveConversation={false}
-                isOnline={true}
-              />
-              <Contact
-                name="Menganito"
-                avatar={placeholder}
-                isActiveConversation={true}
-                isOnline={false}
-              />
-            </ul>
+            <ContactList filter={searchFilter} />
           </li>
         </ul>
         <p className="menu-label has-text-weight-bold">{m.groupsLabel}</p>
         <ul className="menu-list">
           <li>
-            <ul>
-              <li>
-                <a>Group Chat</a>
-              </li>
-              <li>
-                <a>Group Chat</a>
-              </li>
-            </ul>
+            <GroupList filter={searchFilter} />
           </li>
         </ul>
       </div>

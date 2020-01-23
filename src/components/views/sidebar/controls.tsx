@@ -13,17 +13,17 @@ const Controls: React.FC = () => {
       <li>
         <a className="media">
           <span className="icon media-left">
-            <FontAwesomeIcon icon="users" fixedWidth={true} />
+            <FontAwesomeIcon icon="plus" fixedWidth={true} />
           </span>
-          <span className="media-content">{m.addGroup}</span>
+          <span className="media-content">{m.addContact}</span>
         </a>
       </li>
       <li>
         <a className="media">
           <span className="icon media-left">
-            <FontAwesomeIcon icon="plus" fixedWidth={true} />
+            <FontAwesomeIcon icon="users" fixedWidth={true} />
           </span>
-          <span className="media-content">{m.addContact}</span>
+          <span className="media-content">{m.addGroup}</span>
         </a>
       </li>
     </ul>
