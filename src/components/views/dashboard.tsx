@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { Chat } from './chat';
 import { Sidebar } from './sidebar';
+import { Settings } from '../modals/settings';
 import { getProfile } from '@store/profile/actions';
 
 const Dashboard: React.FC = () => {
@@ -15,6 +16,7 @@ const Dashboard: React.FC = () => {
     <section className="columns is-mobile is-fullheight is-marginless">
       <Sidebar />
       <Chat />
+      <Settings />
     </section>
   );
 };

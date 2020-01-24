@@ -1,7 +1,7 @@
 /// ----- Common Interfaces and Types ----- ///
 
 export type ContactStatus = 'accepted' | 'blocked' | 'pending';
-export type UserLanguage = 'en' | 'es';
+export type UserLanguage = 'auto' | 'en' | 'es';
 
 export interface WithSuccess {
   success: boolean;
