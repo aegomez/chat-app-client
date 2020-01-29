@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 
 import { useTypedSelector } from '../../lib';
-import { setLogoutVisible, setSettingsVisible } from '@store/view/actions';
+import { showLogout, showSettings } from '@store/view/actions';
 
 /* TBD i18n */
 const m = {
@@ -21,16 +21,16 @@ const Dropdown: React.FC = () => {
     setDropdownActive(!isDropdownActive);
   }
 
-  function showSettings(event: React.MouseEvent): void {
+  function displaySettings(event: React.MouseEvent): void {
     event.preventDefault();
     setDropdownActive(false);
-    dispatch(setSettingsVisible(true));
+    dispatch(showSettings(true));
   }
 
-  function showLogout(event: React.MouseEvent): void {
+  function displayLogout(event: React.MouseEvent): void {
     event.preventDefault();
     setDropdownActive(false);
-    dispatch(setLogoutVisible(true));
+    dispatch(showLogout(true));
   }
 
   return (
@@ -55,20 +55,23 @@ const Dropdown: React.FC = () => {
         <div className="dropdown-content has-text-centered">
           <div className="dropdown-item is-size-5">{publicName}</div>
           <div className="dropdown-item">
-            <a onClick={showSettings}>
+            <a onClick={displaySettings}>
               <figure className="image is-128x128 is-inline-block">
                 <img src={avatar} alt="User avatar" className="is-rounded" />
               </figure>
             </a>
           </div>
-          <a className="dropdown-item media is-size-6" onClick={showSettings}>
+          <a
+            className="dropdown-item media is-size-6"
+            onClick={displaySettings}
+          >
             <span className="icon media-left">
               <FontAwesomeIcon icon="wrench" />
             </span>
             <span className="media-content">{m.settings}</span>
           </a>
           <div className="dropdown-divider"></div>
-          <a className="dropdown-item media is-size-6" onClick={showLogout}>
+          <a className="dropdown-item media is-size-6" onClick={displayLogout}>
             <span className="icon media-left">
               <FontAwesomeIcon icon="sign-out-alt" />
             </span>

@@ -5,10 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ModalCard } from './modalCard';
 import { HorizontalControl } from '../forms';
 import { useTypedSelector } from '../lib';
-import {
-  setSettingsVisible,
-  setAvatarSuccessVisible
-} from '@store/view/actions';
+import { showSettings, showAvatarSuccess } from '@store/view/actions';
 import {
   updateAvatar,
   updateLanguage,
@@ -58,8 +55,8 @@ const Settings: React.FC = () => {
     setAlias(publicName);
     setLang(language);
     // Reset visibility flags
-    dispatch(setAvatarSuccessVisible(false));
-    dispatch(setSettingsVisible(false));
+    dispatch(showAvatarSuccess(false));
+    dispatch(showSettings(false));
   }
 
   // On component value changes, update the internal state.

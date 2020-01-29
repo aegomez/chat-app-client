@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { useTypedSelector } from '../lib';
 import { logoutUser } from '@store/auth/actions';
-import { setLogoutVisible } from '@store/view/actions';
+import { showLogout } from '@store/view/actions';
 import { Modal } from './Modal';
 
 const m = {
@@ -20,7 +20,7 @@ const Logout: React.FC = () => {
 
   // Dispatch actions on button press
   function handleCancel(): void {
-    dispatch(setLogoutVisible(false));
+    dispatch(showLogout(false));
   }
   function handleConfirm(): void {
     dispatch(logoutUser.request());

@@ -2,9 +2,9 @@ import { createReducer } from 'typesafe-actions';
 
 import {
   setRedirectToLogin,
-  setLogoutVisible,
-  setSettingsVisible,
-  setAvatarSuccessVisible,
+  showLogout,
+  showSettings,
+  showAvatarSuccess,
   failRequest
 } from './actions';
 import { logoutUser } from '../auth/actions';
@@ -29,17 +29,17 @@ export const viewReducer = createReducer(initialState)
     failureVisible: action.payload
   }))
   // Show/hide the settings view
-  .handleAction(setSettingsVisible, (state, action) => ({
+  .handleAction(showSettings, (state, action) => ({
     ...state,
     settingsVisible: action.payload
   }))
   // Show success notification after updating avatar
-  .handleAction(setAvatarSuccessVisible, (state, action) => ({
+  .handleAction(showAvatarSuccess, (state, action) => ({
     ...state,
     avatarSuccessVisible: action.payload
   }))
 
-  .handleAction(setLogoutVisible, (state, action) => ({
+  .handleAction(showLogout, (state, action) => ({
     ...state,
     logoutVisible: action.payload
   }))

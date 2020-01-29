@@ -8,15 +8,15 @@ export const setRedirectToLogin = createAction('view/setRegisterRedirect')<
 >();
 
 // Show/hide the settings view
-export const setSettingsVisible = createAction('view/showSettings')<boolean>();
+export const showSettings = createAction('view/showSettings')<boolean>();
 
 // Show avatar update success
-export const setAvatarSuccessVisible = createAction('view/showAvatarSuccess')<
+export const showAvatarSuccess = createAction('view/showAvatarSuccess')<
   boolean
 >();
 
 // Show/hide the logout confirmation
-export const setLogoutVisible = createAction('view/showLogout')<boolean>();
+export const showLogout = createAction('view/showLogout')<boolean>();
 
 // General request failure action creator
 export const failRequest = createAction('user/any/failure')<boolean>();
