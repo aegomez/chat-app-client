@@ -5,7 +5,7 @@ import { call } from 'typed-redux-saga';
 import * as actions from './actions';
 import * as api from '@api/user';
 import { clearLoggedInFlag } from '@api/browser/storage';
-import { failRequest } from '@store/view/actions';
+import { failRequest, setAvatarSuccessVisible } from '@store/view/actions';
 
 // Show error to user for 3 seconds, then hide it
 function* handleErrorSaga(): SagaIterator {
@@ -127,7 +127,10 @@ function* updateAvatarSaga(
   const { updateUserAvatar: data } = yield* call(api.updateUserAvatar, payload);
 
   if (data?.success) {
-    yield put(actions.updateAvatar.success(payload));
+    yield all([
+      put(actions.updateAvatar.success(payload)),
+      put(setAvatarSuccessVisible(true))
+    ]);
   } else {
     yield* call(handleErrorSaga);
   }

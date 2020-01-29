@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Modal } from './modal';
+import { ModalCard } from './modalCard';
 import { HorizontalControl } from '../forms';
 import { useTypedSelector } from '../lib';
-import { setSettingsVisible } from '@store/view/actions';
+import {
+  setSettingsVisible,
+  setAvatarSuccessVisible
+} from '@store/view/actions';
 import {
   updateAvatar,
   updateLanguage,
@@ -21,12 +24,17 @@ const m = {
   language: 'Language',
   notValid: 'Alias must be 1-40 characters long.',
   save: 'Save',
-  upload: 'Change image...'
+  success: 'Updated successfully!',
+  upload: 'Change image...',
+  cancel: 'Cancel'
 };
 
 const Settings: React.FC = () => {
   // Redux state
   const isActive = useTypedSelector(state => state.view.settingsVisible);
+  const avatarSuccess = useTypedSelector(
+    state => state.view.avatarSuccessVisible
+  );
   const avatar = useTypedSelector(state => state.profile.avatar);
   const language = useTypedSelector(state => state.profile.language);
   const publicName = useTypedSelector(state => state.profile.publicName);
@@ -45,21 +53,23 @@ const Settings: React.FC = () => {
     setLang(language);
   }, [publicName, language]);
 
-  function hide(): void {
+  function hideModal(): void {
+    // Reset internal state
+    setAlias(publicName);
+    setLang(language);
+    // Reset visibility flags
+    dispatch(setAvatarSuccessVisible(false));
     dispatch(setSettingsVisible(false));
   }
 
   // On component value changes, update the internal state.
   function changeAlias(event: React.ChangeEvent<HTMLInputElement>): void {
-    setAlias(event.target.value);
-    // Validate the alias/publicName length
-    setValid(!!alias.length && alias.length < 40);
-    /**
-     *
-     * FIX ME
-     * Validation is not running correctly on render, its late by one step.
-     *
-     */
+    const { value } = event.target;
+    setAlias(value);
+    // Validate the alias/publicName length.
+    // Note: alias does not update immediately,
+    // so the target value is compared instead.
+    setValid(!!value.length && value.length < 40);
   }
   function changeLang(event: React.ChangeEvent<HTMLSelectElement>): void {
     setLang(event.target.value);
@@ -76,72 +86,105 @@ const Settings: React.FC = () => {
     dispatch(updateLanguage.request(lang as UserLanguage));
   }
 
+  function showWidget(): void {
+    cloudinary.openUploadWidget(
+      {
+        cloudName: 'nonamechat',
+        uploadPreset: 'r38gied5',
+        maxFiles: 1,
+        cropping: true,
+        croppingAspectRatio: 1,
+        resourceType: 'image'
+      },
+      (error, result) => {
+        if (error) {
+          return console.error(error);
+        }
+        if (result && result.event === 'success') {
+          const url = '' + result.info.secure_url;
+          dispatch(updateAvatar.request(url));
+        }
+      }
+    );
+  }
+
   return (
-    <Modal closeModal={hide} isActive={isActive}>
-      <section className="box">
-        <p className="title">{m.title}</p>
-        <HorizontalControl label={m.name}>
-          <div className="control">
+    <ModalCard
+      cancel={m.cancel}
+      closeHandler={hideModal}
+      isActive={isActive}
+      title={m.title}
+    >
+      <HorizontalControl label={m.name}>
+        <div className="control">
+          <input
+            type="text"
+            className="input is-static"
+            value={userName}
+            readOnly
+          />
+        </div>
+      </HorizontalControl>
+      <HorizontalControl label={m.alias}>
+        <div className="field has-addons">
+          <div className="control has-icons-left has-icons-right is-expanded">
             <input
               type="text"
-              className="input is-static"
-              value={userName}
-              readOnly
+              className={'input' + (!isValid ? ' is-danger' : '')}
+              value={alias}
+              onChange={changeAlias}
             />
-          </div>
-        </HorizontalControl>
-        <HorizontalControl label={m.alias}>
-          <div className="field has-addons">
-            <div className="control has-icons-left has-icons-right is-expanded">
-              <input
-                type="text"
-                className={'input' + (!isValid ? ' is-danger' : '')}
-                value={alias}
-                onChange={changeAlias}
-              />
-              <span className="icon is-small is-left">
-                <FontAwesomeIcon icon="edit" />
+            <span className="icon is-small is-left">
+              <FontAwesomeIcon icon="edit" />
+            </span>
+            {isValid ? null : (
+              <span className="icon is-small is-right">
+                <FontAwesomeIcon icon="exclamation-triangle" />
               </span>
-              {isValid ? null : (
-                <span className="icon is-small is-right">
-                  <FontAwesomeIcon icon="exclamation-triangle" />
-                </span>
-              )}
-            </div>
-            <div className="control">
-              <button className="button is-info" onClick={savePublicName}>
-                {m.save}
-              </button>
-            </div>
+            )}
           </div>
-          <p className="help is-danger">{isValid ? null : m.notValid}</p>
-        </HorizontalControl>
-        <HorizontalControl label={m.language} bodyClass="has-addons">
-          <div className="control is">
-            <div className="select">
-              <select value={lang} onChange={changeLang}>
-                <option value="auto">Auto</option>
-                <option value="en">🇬🇧 - English</option>
-                <option value="es">🇪🇸 - Español</option>
-              </select>
-            </div>
-          </div>
-          <p className="control">
-            <button className="button is-info" onClick={saveLanguage}>
+          <div className="control">
+            <button className="button is-link" onClick={savePublicName}>
               {m.save}
             </button>
-          </p>
-        </HorizontalControl>
-        <HorizontalControl label={m.avatar}>
-          <div className="control">
-            <figure className="image is-128x128">
-              <img src={avatar} alt="User avatar" />
-            </figure>
-            <button className="button is-info">{m.upload}</button>
           </div>
-        </HorizontalControl>
-      </section>
-    </Modal>
+        </div>
+        <p className="help is-danger">{isValid ? null : m.notValid}</p>
+      </HorizontalControl>
+      <HorizontalControl label={m.language} bodyClass="has-addons">
+        <div className="control has-icons-left">
+          <div className="select">
+            <select value={lang} onChange={changeLang}>
+              <option value="auto">Auto</option>
+              <option value="en">🇬🇧 - English</option>
+              <option value="es">🇪🇸 - Español</option>
+            </select>
+          </div>
+          <div className="icon is-left">
+            <FontAwesomeIcon icon="globe" />
+          </div>
+        </div>
+        <p className="control">
+          <button className="button is-link" onClick={saveLanguage}>
+            {m.save}
+          </button>
+        </p>
+      </HorizontalControl>
+      <HorizontalControl label={m.avatar}>
+        <div className="control">
+          <figure className="image is-128x128">
+            <img src={avatar} alt="User avatar" />
+          </figure>
+          {avatarSuccess ? (
+            <span className="tag is-success is-medium">{m.success}</span>
+          ) : (
+            <button className="button is-link" onClick={showWidget}>
+              {m.upload}
+            </button>
+          )}
+        </div>
+      </HorizontalControl>
+    </ModalCard>
   );
 };
 

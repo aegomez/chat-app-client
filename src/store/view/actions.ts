@@ -10,6 +10,11 @@ export const setRedirectToLogin = createAction('view/setRegisterRedirect')<
 // Show/hide the settings view
 export const setSettingsVisible = createAction('view/showSettings')<boolean>();
 
+// Show avatar update success
+export const setAvatarSuccessVisible = createAction('view/showAvatarSuccess')<
+  boolean
+>();
+
 // Show/hide the logout confirmation
 export const setLogoutVisible = createAction('view/showLogout')<boolean>();
 

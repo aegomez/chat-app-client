@@ -55,9 +55,11 @@ const Dropdown: React.FC = () => {
         <div className="dropdown-content has-text-centered">
           <div className="dropdown-item is-size-5">{publicName}</div>
           <div className="dropdown-item">
-            <figure className="image is-64x64 is-inline-block">
-              <img src={avatar} alt="User avatar" className="is-rounded" />
-            </figure>
+            <a onClick={showSettings}>
+              <figure className="image is-128x128 is-inline-block">
+                <img src={avatar} alt="User avatar" className="is-rounded" />
+              </figure>
+            </a>
           </div>
           <a className="dropdown-item media is-size-6" onClick={showSettings}>
             <span className="icon media-left">
