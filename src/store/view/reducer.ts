@@ -7,6 +7,7 @@ import {
   setAvatarSuccessVisible,
   failRequest
 } from './actions';
+import { logoutUser } from '../auth/actions';
 
 const initialState = {
   redirectToLogin: false,
@@ -41,4 +42,6 @@ export const viewReducer = createReducer(initialState)
   .handleAction(setLogoutVisible, (state, action) => ({
     ...state,
     logoutVisible: action.payload
-  }));
+  }))
+
+  .handleAction(logoutUser.success, () => initialState);

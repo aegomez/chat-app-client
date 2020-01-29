@@ -1,6 +1,7 @@
 import { createReducer } from 'typesafe-actions';
 
 import { setActiveChat } from './actions';
+import { logoutUser } from '../auth/actions';
 
 const initialState = {
   // id of the contact/group
@@ -10,9 +11,8 @@ const initialState = {
   isGroupChat: false
 };
 
-export const chatReducer = createReducer(initialState).handleAction(
-  setActiveChat,
-  (state, action) => {
+export const chatReducer = createReducer(initialState)
+  .handleAction(setActiveChat, (state, action) => {
     const { chatId, conversationId, isGroupChat } = action.payload;
     return {
       ...state,
@@ -20,5 +20,5 @@ export const chatReducer = createReducer(initialState).handleAction(
       activeConversation: conversationId,
       isGroupChat
     };
-  }
-);
+  })
+  .handleAction(logoutUser.success, () => initialState);

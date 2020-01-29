@@ -13,14 +13,13 @@ const updateUserAvatarQuery = /* GraphQL */ `
   }
 `;
 
-// Not implemented for the client
-// const updateUserConnectedQuery = /* GraphQL */ `
-//   mutation connected($status: Boolean) {
-//     updateUserConnected(status: $status) {
-//       success
-//     }
-//   }
-// `;
+const updateUserConnectedQuery = /* GraphQL */ `
+  mutation connected($status: Boolean) {
+    updateUserConnected(status: $status) {
+      success
+    }
+  }
+`;
 
 const updateUserLanguageQuery = /* GraphQL */ `
   mutation language($newLanguage: UserLanguageEnum) {
@@ -46,10 +45,11 @@ export function updateUserAvatar(
   return request(USER_API, updateUserAvatarQuery, { input });
 }
 
-// Not implemented for the client
-// export function updateUserConnected(status: boolean): SuccessResponse {
-//   return request(USER_API, updateUserConnectedQuery, { status });
-// }
+export function updateUserConnected(
+  status: boolean
+): SuccessResponse<'updateUserConnected'> {
+  return request(USER_API, updateUserConnectedQuery, { status });
+}
 
 export function updateUserLanguage(
   newLanguage: UserLanguage

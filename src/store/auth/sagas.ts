@@ -8,8 +8,9 @@ import {
   registerUser,
   showRegisterSuccess
 } from './actions';
-import { setRedirectToLogin } from '../view/actions';
+import { setRedirectToLogin } from '@store/view/actions';
 import * as authApi from '@api/auth';
+import { updateUserConnected } from '@api/user';
 import { setLoggedInFlag, clearLoggedInFlag } from '@api/browser/storage';
 
 function* registerUserSaga(
@@ -49,19 +50,24 @@ function* loginUserSaga(
   }
 }
 
-export function* logoutUserSaga(): SagaIterator<void> {
+function* logoutUserSaga(): SagaIterator<void> {
   try {
-    // const response: boolean = yield* call(authApi.logout);
-    // const data = response.logout;
-    yield all([put(logoutUser.success()), fork(clearLoggedInFlag)]);
+    const response = yield* call(updateUserConnected, false);
+    const data = response.updateUserConnected;
+    if (data) {
+      yield all([put(logoutUser.success()), fork(clearLoggedInFlag)]);
+    } else {
+      yield put(logoutUser.failure());
+    }
   } catch (error) {
-    yield put(logoutUser.failure());
+    console.error('>>> logoutUserSaga : fatalError', error);
   }
 }
 
 export function* watchAuthSagas(): SagaIterator<void> {
   // while (true) {
   yield takeLatest(loginUser.request, loginUserSaga);
+  yield takeLatest(logoutUser.request, logoutUserSaga);
   yield takeLatest(registerUser.request, registerUserSaga);
   // }
 }

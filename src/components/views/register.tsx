@@ -1,10 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 
 import { FormContainer, Text, Email, Password } from '../forms';
+import { useTypedSelector } from '../lib';
 import { registerUser } from '@store/auth/actions';
-import { getRedirectToLogin } from '@store/view/selectors';
 import { RegisterUserKeys } from '@api/auth';
 
 /* TBR i18n */
@@ -30,7 +29,7 @@ const Register: React.FC = () => {
     phrases
   };
 
-  const redirect = useSelector(getRedirectToLogin);
+  const redirect = useTypedSelector(state => state.view.redirectToLogin);
 
   if (redirect) {
     return <Redirect to="/login" />;

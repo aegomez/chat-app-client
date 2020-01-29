@@ -12,6 +12,7 @@ import {
   updatePublicName,
   updateLanguage
 } from './actions';
+import { logoutUser } from '../auth/actions';
 import { UserSchema } from '@api/user';
 
 const initialState: UserSchema & {
@@ -146,6 +147,6 @@ export const profileReducer = createReducer(initialState)
     publicName: action.payload
   }))
 
-  // After a getUserProfile failed request,
-  // reset the state.
-  .handleAction(getProfile.failure, () => initialState);
+  // After a getUserProfile failed request or
+  // a logoutUser success, reset the state.
+  .handleAction([getProfile.failure, logoutUser.success], () => initialState);

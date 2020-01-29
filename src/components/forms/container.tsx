@@ -1,13 +1,12 @@
 import React from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { SubmitButton } from './buttons';
 import { FormContext } from './contexts';
-import { useDictionary } from '../lib';
+import { useDictionary, useTypedSelector } from '../lib';
 import { resetErrors } from '@store/auth/actions';
-import { getErrors, getSuccessVisible } from '@store/auth/selectors';
 
 import { FormProps, ButtonProps } from './types';
 
@@ -23,8 +22,8 @@ const FormContainer: React.FC<FormProps> = ({
 
   // react-redux hooks
   const dispatch = useDispatch();
-  const showSuccess = useSelector(getSuccessVisible);
-  const errors = useSelector(getErrors, shallowEqual);
+  const showSuccess = useTypedSelector(state => state.auth.successVisible);
+  const errors = useTypedSelector(state => state.auth.errors);
 
   // Clear error messages on first render only
   React.useEffect(() => {

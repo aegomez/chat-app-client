@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import { Dashboard, Landing, Login, Register } from './components/views';
-import { getIsAuthenticated } from './store/auth/selectors';
+import { useTypedSelector } from './components/lib';
 import { hideMainNavbar, unhideMainNavbar } from '@api/browser/dom';
 
 const PublicRoute: React.FC = () => {
@@ -33,7 +32,7 @@ const PrivateRoute: React.FC = () => {
 };
 
 const RootRouter: React.FC = () => {
-  const isAuthenticated = useSelector(getIsAuthenticated);
+  const isAuthenticated = useTypedSelector(state => state.auth.isAuthenticated);
   return (
     <BrowserRouter>
       {isAuthenticated ? <PrivateRoute /> : <PublicRoute />}

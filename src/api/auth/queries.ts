@@ -50,7 +50,7 @@ export async function login(
     loginQuery,
     variables
   );
-  console.log('>>> authApi loginResult', response);
+
   return response;
 }
 
@@ -62,6 +62,6 @@ export async function register(
     registerQuery,
     variables
   );
-  console.log('>>> authApi registerResult:', response);
+
   return response;
 }
