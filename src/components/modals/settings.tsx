@@ -31,7 +31,7 @@ const m = {
 
 const Settings: React.FC = () => {
   // Redux state
-  const isActive = useTypedSelector(state => state.view.settingsVisible);
+  const isVisible = useTypedSelector(state => state.view.settingsVisible);
   const avatarSuccess = useTypedSelector(
     state => state.view.avatarSuccessVisible
   );
@@ -108,13 +108,8 @@ const Settings: React.FC = () => {
     );
   }
 
-  return (
-    <ModalCard
-      cancel={m.cancel}
-      closeHandler={hideModal}
-      isActive={isActive}
-      title={m.title}
-    >
+  return isVisible ? (
+    <ModalCard cancel={m.cancel} closeHandler={hideModal} title={m.title}>
       <HorizontalControl label={m.name}>
         <div className="control">
           <input
@@ -185,7 +180,7 @@ const Settings: React.FC = () => {
         </div>
       </HorizontalControl>
     </ModalCard>
-  );
+  ) : null;
 };
 
 export { Settings };

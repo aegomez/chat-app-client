@@ -9,8 +9,6 @@ interface ModalCardProps {
   closeHandler: () => void;
   // Handle a submit button click
   submitHandler?: () => void;
-  // Show/hide the modal
-  isActive: boolean;
 }
 
 const ModalCard: React.FC<ModalCardProps> = ({
@@ -19,10 +17,9 @@ const ModalCard: React.FC<ModalCardProps> = ({
   submit,
   closeHandler,
   submitHandler,
-  title,
-  isActive
+  title
 }) => {
-  return isActive ? (
+  return (
     <div className="modal is-active">
       <div className="modal-background" onClick={closeHandler}></div>
       <div className="modal-card">
@@ -49,7 +46,7 @@ const ModalCard: React.FC<ModalCardProps> = ({
         </footer>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export { ModalCard };
