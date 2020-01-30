@@ -5,6 +5,7 @@ interface ModalCardProps {
   // Button labels
   cancel: string;
   submit?: string;
+  submitDisabled?: boolean;
   // Handle a click on the overlay or close button
   closeHandler: () => void;
   // Handle a submit button click
@@ -15,6 +16,7 @@ const ModalCard: React.FC<ModalCardProps> = ({
   children,
   cancel,
   submit,
+  submitDisabled,
   closeHandler,
   submitHandler,
   title
@@ -34,7 +36,11 @@ const ModalCard: React.FC<ModalCardProps> = ({
         <section className="modal-card-body">{children}</section>
         <footer className="modal-card-foot">
           {submit ? (
-            <button className="button is-success" onClick={submitHandler}>
+            <button
+              className="button is-success"
+              onClick={submitHandler}
+              disabled={submitDisabled}
+            >
               {submit}
             </button>
           ) : null}

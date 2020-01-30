@@ -2,7 +2,6 @@ import { createAsyncAction, createAction } from 'typesafe-actions';
 
 import {
   UserSchema,
-  NewContactData,
   UpdateContactArgs,
   CreateGroupArgs,
   NewGroupData,
@@ -23,15 +22,15 @@ export const getProfile = createAsyncAction(
 
 export const addContact = {
   request: createAction('contacts/add')<string>(),
-  success: createAction('contacts/add/success')<NewContactData>()
+  success: createAction('contacts/add/success')<undefined>()
 };
 export const deleteContact = {
   request: createAction('contacts/delete')<string>(),
   success: createAction('contacts/delete/success')<string>()
 };
 export const updateContact = {
-  request: createAction('contacts/delete')<UpdateContactArgs>(),
-  success: createAction('contacts/delete/success')<UpdateContactArgs>()
+  request: createAction('contacts/update')<UpdateContactArgs>(),
+  success: createAction('contacts/update/success')<UpdateContactArgs>()
 };
 
 export const createGroup = {

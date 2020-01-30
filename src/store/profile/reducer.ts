@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions';
 
 import {
   getProfile,
-  addContact,
+  // addContact,
   deleteContact,
   updateContact,
   createGroup,
@@ -39,19 +39,9 @@ export const profileReducer = createReducer(initialState)
 
   // Contacts actions
 
-  // Clone the contacts array and insert a new entry.
-  .handleAction(addContact.success, (state, action) => {
-    const { conversation, profile } = action.payload;
-    const contacts: UserSchema['contacts'] = [
-      ...state.contacts,
-      {
-        conversation,
-        ref: profile,
-        status: 'pending'
-      }
-    ];
-    return { ...state, contacts };
-  })
+  // Does not do anything at the moment,
+  // until the contact accepts the request.
+  // .handleAction(addContact.success, state => state)
 
   // Find and delete an entry from the contacts array.
   .handleAction(deleteContact.success, (state, action) => {

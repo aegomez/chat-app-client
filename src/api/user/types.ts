@@ -61,14 +61,6 @@ export interface UpdateContactArgs {
   targetId: string;
   newStatus: ContactStatus;
 }
-// Contacts: Return types
-export interface NewContactData {
-  profile: PartialUserSchema;
-  conversation: string;
-}
-export type AddContactResponse = Promise<{
-  addContact: WithSuccess & NewContactData;
-}>;
 
 // Groups: Input arguments types
 export interface CreateGroupArgs {

@@ -66,7 +66,7 @@ const Settings: React.FC = () => {
     // Validate the alias/publicName length.
     // Note: alias does not update immediately,
     // so the target value is compared instead.
-    setValid(!!value.length && value.length < 40);
+    setValid(!!value.length && value.length < 41);
   }
   function changeLang(event: React.ChangeEvent<HTMLSelectElement>): void {
     setLang(event.target.value);

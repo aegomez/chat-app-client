@@ -1,11 +1,7 @@
 import { request } from 'graphql-request';
 
 import { USER_API } from '../queries';
-import {
-  AddContactResponse,
-  SuccessResponse,
-  UpdateContactArgs
-} from '../types';
+import { SuccessResponse, UpdateContactArgs } from '../types';
 
 /// ----- GraphQL Template Strings ----- ///
 
@@ -13,15 +9,6 @@ const addContactQuery = /* GraphQL */ `
   mutation add($contactName: String) {
     addContact(contactName: $contactName) {
       success
-      profile {
-        _id
-        avatar
-        connected
-        lastConnection
-        publicName
-        userName
-      }
-      conversation
     }
   }
 `;
@@ -44,7 +31,7 @@ const updateContactQuery = /* GraphQL */ `
 
 /// ----- API Abstractions ----- ///
 
-export function addContact(contactName: string): AddContactResponse {
+export function addContact(contactName: string): SuccessResponse<'addContact'> {
   return request(USER_API, addContactQuery, { contactName });
 }
 

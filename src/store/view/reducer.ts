@@ -5,6 +5,11 @@ import {
   showLogout,
   showSettings,
   showAvatarSuccess,
+  showAddContact,
+  showContactSuccess,
+  showCreateGroup,
+  showGroupSuccess,
+  showInvitations,
   failRequest
 } from './actions';
 import { logoutUser } from '../auth/actions';
@@ -14,7 +19,12 @@ const initialState = {
   failureVisible: false,
   settingsVisible: false,
   avatarSuccessVisible: false,
-  logoutVisible: false
+  logoutVisible: false,
+  addContactVisible: false,
+  contactSuccessVisible: false,
+  createGroupVisible: false,
+  invitationsVisible: false,
+  groupSuccessVisible: false
 };
 
 export const viewReducer = createReducer(initialState)
@@ -38,10 +48,33 @@ export const viewReducer = createReducer(initialState)
     ...state,
     avatarSuccessVisible: action.payload
   }))
-
+  // Show/hide the logout confirmation view
   .handleAction(showLogout, (state, action) => ({
     ...state,
     logoutVisible: action.payload
+  }))
+  // Show/hide the add contact view
+  .handleAction(showAddContact, (state, action) => ({
+    ...state,
+    addContactVisible: action.payload
+  }))
+  .handleAction(showContactSuccess, (state, action) => ({
+    ...state,
+    contactSuccessVisible: action.payload
+  }))
+  // Show/hide the create group view
+  .handleAction(showCreateGroup, (state, action) => ({
+    ...state,
+    createGroupVisible: action.payload
+  }))
+  .handleAction(showGroupSuccess, (state, action) => ({
+    ...state,
+    groupSuccessVisible: action.payload
+  }))
+  // Show/hide the accept/hide contacts modal
+  .handleAction(showInvitations, (state, action) => ({
+    ...state,
+    invitationsVisible: action.payload
   }))
 
   .handleAction(logoutUser.success, () => initialState);

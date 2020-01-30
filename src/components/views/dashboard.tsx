@@ -3,7 +3,13 @@ import { useDispatch } from 'react-redux';
 
 import { Chat } from './chat';
 import { Sidebar } from './sidebar';
-import { Settings, Logout } from '../modals';
+import {
+  Settings,
+  AddContact,
+  CreateGroup,
+  Invitations,
+  Logout
+} from '../modals';
 import { getProfile } from '@store/profile/actions';
 
 const Dashboard: React.FC = () => {
@@ -17,6 +23,9 @@ const Dashboard: React.FC = () => {
       <Sidebar />
       <Chat />
       <Settings />
+      <AddContact />
+      <CreateGroup />
+      <Invitations />
       <Logout />
     </section>
   );

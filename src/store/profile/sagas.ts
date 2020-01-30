@@ -5,7 +5,12 @@ import { call } from 'typed-redux-saga';
 import * as actions from './actions';
 import * as api from '@api/user';
 import { clearLoggedInFlag } from '@api/browser/storage';
-import { failRequest, showAvatarSuccess } from '@store/view/actions';
+import {
+  failRequest,
+  showAvatarSuccess,
+  showContactSuccess,
+  showGroupSuccess
+} from '@store/view/actions';
 
 // Show error to user for 3 seconds, then hide it
 function* handleErrorSaga(): SagaIterator {
@@ -34,7 +39,10 @@ function* addContactSaga(
   const { addContact: data } = yield* call(api.addContact, action.payload);
 
   if (data?.success) {
-    yield put(actions.addContact.success(data));
+    yield all([
+      put(actions.addContact.success()),
+      put(showContactSuccess(true))
+    ]);
   } else {
     yield fork(clearLoggedInFlag);
     yield* call(handleErrorSaga);
@@ -76,9 +84,12 @@ function* createGroupSaga(
 
   if (data?.success) {
     const { _id, conversation } = data;
-    yield put(
-      actions.createGroup.success({ _id, conversation, ...action.payload })
-    );
+    yield all([
+      put(
+        actions.createGroup.success({ _id, conversation, ...action.payload })
+      ),
+      put(showGroupSuccess(true))
+    ]);
   } else {
     yield* call(handleErrorSaga);
   }
