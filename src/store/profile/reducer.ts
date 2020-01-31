@@ -15,9 +15,7 @@ import {
 import { logoutUser } from '../auth/actions';
 import { UserSchema } from '@api/user';
 
-const initialState: UserSchema & {
-  failureVisible: boolean;
-} = {
+const initialState: UserSchema = {
   _id: '',
   avatar: 'img/user.png',
   connected: true,
@@ -25,17 +23,13 @@ const initialState: UserSchema & {
   groups: [],
   language: 'en',
   lastConnection: 0,
-  publicName: 'alias',
-  userName: 'username',
-  failureVisible: false
+  publicName: '',
+  userName: ''
 };
 
 export const profileReducer = createReducer(initialState)
   // Copy the payload as the full profile state
-  .handleAction(getProfile.success, (_state, action) => ({
-    ...action.payload,
-    failureVisible: false
-  }))
+  .handleAction(getProfile.success, (_state, action) => action.payload)
 
   // Contacts actions
 
@@ -73,7 +67,7 @@ export const profileReducer = createReducer(initialState)
   // entry, with the user as its only member.
   .handleAction(createGroup.success, (state, action) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { contacts, failureVisible, language, groups, ...userProps } = state;
+    const { contacts, language, groups, ...userProps } = state;
     const newGroups: UserSchema['groups'] = [
       ...groups,
       {

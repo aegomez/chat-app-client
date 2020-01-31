@@ -1,89 +1,112 @@
-import { put, delay, all, takeEvery, fork } from 'redux-saga/effects';
+import { put, delay, all, fork } from 'redux-saga/effects';
 import { SagaIterator } from 'redux-saga';
-import { call } from 'typed-redux-saga';
+import { call, take } from 'typed-redux-saga';
 
 import * as actions from './actions';
 import * as api from '@api/user';
 import { clearLoggedInFlag } from '@api/browser/storage';
 import {
+  failOperation,
   failRequest,
   showAvatarSuccess,
   showContactSuccess,
   showGroupSuccess
 } from '@store/view/actions';
+import { logoutUser } from '@store/auth/actions';
 
-// Show error to user for 3 seconds, then hide it
-function* handleErrorSaga(): SagaIterator {
-  yield put(failRequest(true));
-  yield delay(3000);
-  yield put(failRequest(false));
+// Constants
+const NO_SUCCESS = 'NO_SUCCESS';
+const NOT_AUTHORIZED = 'NOT_AUTHORIZED';
+
+// General error handler
+function* handleErrorSaga(error: Error): SagaIterator {
+  console.log('handleErrorSaga was called');
+  if (error.message === NO_SUCCESS) {
+    // Request was successful, but operation failed
+    // due to a problem with the data or the database.
+    console.error('NO_SUCCESS_ERROR');
+    // Show error to user for 3 seconds, then hide it.
+    yield put(failOperation(true));
+    yield delay(3000);
+    yield put(failOperation(false));
+  } else if (error.message === NOT_AUTHORIZED) {
+    // The cookie is not valid.
+    console.error('NO_AUTH_ERROR: ', error.message);
+    yield all([
+      // Start a logout action
+      put(logoutUser.success()),
+      // Clear local storage flag
+      fork(clearLoggedInFlag)
+    ]);
+  } else {
+    // There was a different error (network, server, etc.)
+    console.error('REQUEST_ERROR');
+    // Show error to user for 3 seconds, then hide it.
+    yield put(failRequest(true));
+    yield delay(3000);
+    yield put(failRequest(false));
+  }
 }
 
 // User Profile
 
 function* getProfileSaga(): SagaIterator {
-  const { getUserProfile: data } = yield* call(api.getUserProfile);
+  yield* take(actions.getProfile.request);
+  const { getUserProfile, error } = yield* call(api.getUserProfile);
 
-  if (data?.success) {
-    yield put(actions.getProfile.success(data.profile));
+  if (getUserProfile?.success) {
+    yield put(actions.getProfile.success(getUserProfile.profile));
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
 // Contacts
 
-function* addContactSaga(
-  action: ReturnType<typeof actions.addContact.request>
-): SagaIterator {
-  const { addContact: data } = yield* call(api.addContact, action.payload);
+function* addContactSaga(): SagaIterator {
+  const action = yield* take(actions.addContact.request);
+  const { addContact, error } = yield* call(api.addContact, action.payload);
 
-  if (data?.success) {
+  if (addContact?.success) {
     yield all([
       put(actions.addContact.success()),
       put(showContactSuccess(true))
     ]);
   } else {
-    yield fork(clearLoggedInFlag);
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
-function* deleteContactSaga(
-  action: ReturnType<typeof actions.deleteContact.request>
-): SagaIterator {
-  const { payload } = action;
-  const { deleteContact: data } = yield* call(api.deleteContact, payload);
+function* deleteContactSaga(): SagaIterator {
+  const { payload } = yield* take(actions.deleteContact.request);
+  const { deleteContact, error } = yield* call(api.deleteContact, payload);
 
-  if (data?.success) {
+  if (deleteContact?.success) {
     yield put(actions.deleteContact.success(payload));
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
-function* updateContactSaga(
-  action: ReturnType<typeof actions.updateContact.request>
-): SagaIterator {
-  const { payload } = action;
-  const { updateContact: data } = yield* call(api.updateContact, payload);
+function* updateContactSaga(): SagaIterator {
+  const { payload } = yield* take(actions.updateContact.request);
+  const { updateContact, error } = yield* call(api.updateContact, payload);
 
-  if (data?.success) {
+  if (updateContact?.success) {
     yield put(actions.updateContact.success(payload));
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
 // Groups
 
-function* createGroupSaga(
-  action: ReturnType<typeof actions.createGroup.request>
-): SagaIterator {
-  const { createGroup: data } = yield* call(api.createGroup, action.payload);
+function* createGroupSaga(): SagaIterator {
+  const action = yield* take(actions.createGroup.request);
+  const { createGroup, error } = yield* call(api.createGroup, action.payload);
 
-  if (data?.success) {
-    const { _id, conversation } = data;
+  if (createGroup?.success) {
+    const { _id, conversation } = createGroup;
     yield all([
       put(
         actions.createGroup.success({ _id, conversation, ...action.payload })
@@ -91,105 +114,112 @@ function* createGroupSaga(
       put(showGroupSuccess(true))
     ]);
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
-function* addGroupMemberSaga(
-  action: ReturnType<typeof actions.addGroupMember.request>
-): SagaIterator {
-  const { payload } = action;
-  const { addGroupMember: data } = yield* call(api.addGroupMember, payload);
+function* addGroupMemberSaga(): SagaIterator {
+  const { payload } = yield* take(actions.addGroupMember.request);
+  const { addGroupMember, error } = yield* call(api.addGroupMember, payload);
 
-  if (data?.success) {
+  if (addGroupMember?.success) {
     yield put(
       actions.addGroupMember.success({
-        groupId: action.payload.groupId,
-        ...data.newMember
+        groupId: payload.groupId,
+        ...addGroupMember.newMember
       })
     );
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
-function* deleteGroupMemberSaga(
-  action: ReturnType<typeof actions.deleteGroupMember.request>
-): SagaIterator {
-  const { payload } = action;
-  const { deleteGroupMember: data } = yield* call(
+function* deleteGroupMemberSaga(): SagaIterator {
+  const { payload } = yield* take(actions.deleteGroupMember.request);
+  const { deleteGroupMember, error } = yield* call(
     api.deleteGroupMember,
     payload
   );
 
-  if (data?.success) {
+  if (deleteGroupMember?.success) {
     yield put(actions.deleteGroupMember.success(payload));
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
 // User Settings
 
-function* updateAvatarSaga(
-  action: ReturnType<typeof actions.updateAvatar.request>
-): SagaIterator {
-  const { payload } = action;
-  const { updateUserAvatar: data } = yield* call(api.updateUserAvatar, payload);
+function* updateAvatarSaga(): SagaIterator {
+  const { payload } = yield* take(actions.updateAvatar.request);
+  const { updateUserAvatar, error } = yield* call(
+    api.updateUserAvatar,
+    payload
+  );
 
-  if (data?.success) {
+  if (updateUserAvatar?.success) {
     yield all([
       put(actions.updateAvatar.success(payload)),
       put(showAvatarSuccess(true))
     ]);
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
-function* updateLanguageSaga(
-  action: ReturnType<typeof actions.updateLanguage.request>
-): SagaIterator {
-  const { payload } = action;
-  const { updateUserLanguage: data } = yield* call(
+function* updateLanguageSaga(): SagaIterator {
+  const { payload } = yield* take(actions.updateLanguage.request);
+  const { updateUserLanguage, error } = yield* call(
     api.updateUserLanguage,
     payload
   );
 
-  if (data?.success) {
+  if (updateUserLanguage?.success) {
     yield put(actions.updateLanguage.success(payload));
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
-function* updatePublicNameSaga(
-  action: ReturnType<typeof actions.updatePublicName.request>
-): SagaIterator {
-  const { payload } = action;
-  const { updateUserPublicName: data } = yield* call(
+function* updatePublicNameSaga(): SagaIterator {
+  const { payload } = yield* take(actions.updatePublicName.request);
+  const { updateUserPublicName, error } = yield* call(
     api.updateUserPublicName,
     payload
   );
 
-  if (data?.success) {
+  if (updateUserPublicName?.success) {
     yield put(actions.updatePublicName.success(payload));
   } else {
-    yield* call(handleErrorSaga);
+    throw Error(error || NO_SUCCESS);
   }
 }
 
 export function* watchProfileSagas(): SagaIterator<void> {
-  yield all([
-    takeEvery(actions.getProfile.request, getProfileSaga),
-    takeEvery(actions.addContact.request, addContactSaga),
-    takeEvery(actions.deleteContact.request, deleteContactSaga),
-    takeEvery(actions.updateContact.request, updateContactSaga),
-    takeEvery(actions.createGroup.request, createGroupSaga),
-    takeEvery(actions.addGroupMember.request, addGroupMemberSaga),
-    takeEvery(actions.deleteGroupMember.request, deleteGroupMemberSaga),
-    takeEvery(actions.updateAvatar.request, updateAvatarSaga),
-    takeEvery(actions.updateLanguage.request, updateLanguageSaga),
-    takeEvery(actions.updatePublicName.request, updatePublicNameSaga)
-  ]);
+  const sagas = [
+    getProfileSaga,
+    addContactSaga,
+    deleteContactSaga,
+    updateContactSaga,
+    createGroupSaga,
+    addGroupMemberSaga,
+    deleteGroupMemberSaga,
+    updateAvatarSaga,
+    updateLanguageSaga,
+    updatePublicNameSaga
+  ];
+
+  yield all(
+    sagas.map(saga =>
+      fork(function*() {
+        while (true) {
+          try {
+            yield* call(saga);
+          } catch (error) {
+            yield* call(handleErrorSaga, error);
+          }
+        }
+      })
+    )
+  );
 }
