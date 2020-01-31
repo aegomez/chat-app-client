@@ -3,14 +3,24 @@
 export type ContactStatus = 'accepted' | 'blocked' | 'pending';
 export type UserLanguage = 'auto' | 'en' | 'es';
 
-export interface WithSuccess {
+// If true, the operation completed succesfully.
+// If false, something failed in the resolver, but
+// network, cookies, query and data types are correct.
+interface WithSuccess {
   success: boolean;
+}
+// If error === 'NOT_AUTHORIZED', the cookie
+// could not be validated.
+interface WithError {
+  error: string;
 }
 
 /**
- * A promise that resolves to `{ [K]: { success: boolean } }`
+ * A promise that resolves to `{ [S]: { success: boolean }, error: string }`
  */
-export type SuccessResponse<S extends string> = Promise<Record<S, WithSuccess>>;
+export type SuccessResponse<S extends string> = Promise<
+  WithError & Record<S, WithSuccess>
+>;
 
 /// ----- Users DB Schemas ----- ///
 
@@ -48,11 +58,13 @@ export interface UserSchema extends PartialUserSchema {
 
 /// ----- Users API Queries ----- ///
 
-export type UserProfileResponse = Promise<{
-  getUserProfile: WithSuccess & {
-    profile: UserSchema;
-  };
-}>;
+export type UserProfileResponse = Promise<
+  WithError & {
+    getUserProfile: WithSuccess & {
+      profile: UserSchema;
+    };
+  }
+>;
 
 /// ----- Users API Mutations ----- ///
 
@@ -76,11 +88,15 @@ export interface NewGroupData {
   _id: string;
   conversation: string;
 }
-export type CreateGroupResponse = Promise<{
-  createGroup: WithSuccess & NewGroupData;
-}>;
-export type AddMemberResponse = Promise<{
-  addGroupMember: WithSuccess & {
-    newMember: PartialUserSchema;
-  };
-}>;
+export type CreateGroupResponse = Promise<
+  WithError & {
+    createGroup: WithSuccess & NewGroupData;
+  }
+>;
+export type AddMemberResponse = Promise<
+  WithError & {
+    addGroupMember: WithSuccess & {
+      newMember: PartialUserSchema;
+    };
+  }
+>;

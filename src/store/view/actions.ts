@@ -33,5 +33,8 @@ export const showGroupSuccess = createAction('view/showGroupSuccess')<
 // Show/hide the accept/hide contacts modal
 export const showInvitations = createAction('view/showInvitations')<boolean>();
 
+// Show operation unsuccessful action creator
+export const failOperation = createAction('view/failOperation')<boolean>();
+
 // General request failure action creator
-export const failRequest = createAction('user/any/failure')<boolean>();
+export const failRequest = createAction('view/failRequest')<boolean>();

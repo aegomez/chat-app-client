@@ -10,13 +10,15 @@ import {
   showCreateGroup,
   showGroupSuccess,
   showInvitations,
+  failOperation,
   failRequest
 } from './actions';
 import { logoutUser } from '../auth/actions';
 
 const initialState = {
   redirectToLogin: false,
-  failureVisible: false,
+  failedRequestVisible: false,
+  failedOperationVisible: false,
   settingsVisible: false,
   avatarSuccessVisible: false,
   logoutVisible: false,
@@ -28,15 +30,22 @@ const initialState = {
 };
 
 export const viewReducer = createReducer(initialState)
+  // Redirect from /register after the user already registered.
   .handleAction(setRedirectToLogin, (state, action) => ({
     ...state,
     redirectToLogin: action.payload
+  }))
+  // After an operation failure (success === false),
+  // show a notification.
+  .handleAction(failOperation, (state, action) => ({
+    ...state,
+    failedOperationVisible: action.payload
   }))
   // After any other request failure,
   // show a notification.
   .handleAction(failRequest, (state, action) => ({
     ...state,
-    failureVisible: action.payload
+    failedRequestVisible: action.payload
   }))
   // Show/hide the settings view
   .handleAction(showSettings, (state, action) => ({
@@ -76,5 +85,5 @@ export const viewReducer = createReducer(initialState)
     ...state,
     invitationsVisible: action.payload
   }))
-
+  // On a logout action, reset the state.
   .handleAction(logoutUser.success, () => initialState);
