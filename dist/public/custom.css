@@ -28,3 +28,6 @@
   align-items: center;
   display: flex;
 }
+.notification.is-marginless {
+  z-index: 80;
+}
