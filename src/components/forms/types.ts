@@ -44,4 +44,5 @@ export interface InputProps extends ControlProps {
 export interface ButtonProps {
   label: string;
   customClass?: string;
+  disabled?: boolean;
 }

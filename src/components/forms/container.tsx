@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,7 +22,8 @@ const FormContainer: React.FC<FormProps> = ({
 
   // react-redux hooks
   const dispatch = useDispatch();
-  const showSuccess = useTypedSelector(state => state.auth.successVisible);
+  const isSuccess = useTypedSelector(state => state.auth.successVisible);
+  // Server-side validation errors
   const errors = useTypedSelector(state => state.auth.errors);
 
   // Clear error messages on first render only
@@ -30,15 +31,28 @@ const FormContainer: React.FC<FormProps> = ({
     dispatch(resetErrors());
   }, [dispatch]);
 
-  const buttonProps: ButtonProps = showSuccess
+  // Validate that all fields are not-empty
+  const isValid = useMemo(() => {
+    return Object.values(values).every(Boolean);
+  }, [values]);
+
+  // Disable the submit button if client-side
+  // validation is not passed.
+  const buttonProps: ButtonProps = isSuccess
     ? { label: 'OK', customClass: 'is-success' }
-    : { label: phrases.submit };
+    : { label: phrases.submit, disabled: !isValid };
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    dispatch(action(values));
+    // Dispatch the action if field values are
+    // valid, and we are not in the success
+    // state (request already resolved).
+    if (isValid && !isSuccess) {
+      dispatch(action(values));
+    }
   }
 
+  // Control input components
   function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const { name, value } = event.target;
     setValues({ [name]: value });
