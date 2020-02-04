@@ -2,6 +2,7 @@ import { createReducer } from 'typesafe-actions';
 
 import {
   setRedirectToLogin,
+  showLoadingProfile,
   showLogout,
   showSettings,
   showAvatarSuccess,
@@ -17,6 +18,7 @@ import { logoutUser } from '../auth/actions';
 
 const initialState = {
   redirectToLogin: false,
+  loadingProfile: false,
   failedRequestVisible: false,
   failedOperationVisible: false,
   settingsVisible: false,
@@ -34,6 +36,11 @@ export const viewReducer = createReducer(initialState)
   .handleAction(setRedirectToLogin, (state, action) => ({
     ...state,
     redirectToLogin: action.payload
+  }))
+  // Show/hide the loading profile spinner
+  .handleAction(showLoadingProfile, (state, action) => ({
+    ...state,
+    loadingProfile: action.payload
   }))
   // After an operation failure (success === false),
   // show a notification.
