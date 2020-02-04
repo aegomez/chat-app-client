@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Chat } from './chat';
 import { Sidebar } from './sidebar';
 import {
+  LoadingProfile,
   Settings,
   AddContact,
   CreateGroup,
@@ -20,6 +21,7 @@ const Dashboard: React.FC = () => {
   });
   return (
     <section className="columns is-mobile is-fullheight is-marginless">
+      <LoadingProfile />
       <Sidebar />
       <Chat />
       <Settings />

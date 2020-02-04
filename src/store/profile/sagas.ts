@@ -1,4 +1,4 @@
-import { put, delay, all, fork } from 'redux-saga/effects';
+import { all, delay, fork, put, retry } from 'redux-saga/effects';
 import { SagaIterator } from 'redux-saga';
 import { call, take } from 'typed-redux-saga';
 
@@ -10,7 +10,8 @@ import {
   failRequest,
   showAvatarSuccess,
   showContactSuccess,
-  showGroupSuccess
+  showGroupSuccess,
+  showLoadingProfile
 } from '@store/view/actions';
 import { logoutUser } from '@store/auth/actions';
 
@@ -50,14 +51,32 @@ function* handleErrorSaga(error: Error): SagaIterator {
 
 // User Profile
 
+// This saga's flow is slightly different,
+// since its required for the app initialization.
 function* getProfileSaga(): SagaIterator {
-  yield* take(actions.getProfile.request);
-  const { getUserProfile, error } = yield* call(api.getUserProfile);
+  try {
+    // Take the action and show the loading overlay
+    // while waiting for a successful response.
+    yield* take(actions.getProfile.request);
+    yield put(showLoadingProfile(true));
+    // Try to fetch the API 3 times, with a 10
+    // seconds interval between calls.
+    const { getUserProfile, error } = yield retry(3, 10000, api.getUserProfile);
 
-  if (getUserProfile?.success) {
-    yield put(actions.getProfile.success(getUserProfile.profile));
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (getUserProfile?.success) {
+      // If response is ok, set the user profile in the store.
+      yield put(actions.getProfile.success(getUserProfile.profile));
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    // Pass any error to the handler.
+    yield* call(handleErrorSaga, err);
+    // After that, dispatch a logout action and clear local storage.
+    yield all([put(logoutUser.success()), fork(clearLoggedInFlag)]);
+  } finally {
+    // Hide the loading overlay
+    yield put(showLoadingProfile(false));
   }
 }
 

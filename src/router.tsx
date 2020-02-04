@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import { Dashboard, Landing, Login, Register } from './components/views';
+import { FailedOperation, FailedRequest } from './components/notifications';
 import { useTypedSelector } from './components/lib';
 import { hideMainNavbar, unhideMainNavbar } from '@api/browser/dom';
 
@@ -35,6 +36,8 @@ const RootRouter: React.FC = () => {
   const isAuthenticated = useTypedSelector(state => state.auth.isAuthenticated);
   return (
     <BrowserRouter>
+      <FailedOperation />
+      <FailedRequest />
       {isAuthenticated ? <PrivateRoute /> : <PublicRoute />}
     </BrowserRouter>
   );

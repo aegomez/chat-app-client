@@ -7,6 +7,11 @@ export const setRedirectToLogin = createAction('view/setRegisterRedirect')<
   boolean
 >();
 
+// Show/hide the loading profile spinner
+export const showLoadingProfile = createAction('view/loadingProfile')<
+  boolean
+>();
+
 // Show/hide the settings view
 export const showSettings = createAction('view/showSettings')<boolean>();
 
