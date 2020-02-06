@@ -51,10 +51,8 @@ const GroupList: React.FC<ListProps> = ({ filter }) => {
     <ul>
       {groups.map((group, key) => {
         // Filter by name
-        if (filter && filter !== group.name) {
-          return null;
-        }
-        return (
+        const isMatch = group.name.toLowerCase().includes(filter.toLowerCase());
+        return isMatch ? (
           <Group
             name={group.name}
             chatId={group._id}
@@ -63,7 +61,7 @@ const GroupList: React.FC<ListProps> = ({ filter }) => {
             eventHandler={setActive}
             key={key}
           />
-        );
+        ) : null;
       })}
     </ul>
   );

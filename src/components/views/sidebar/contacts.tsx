@@ -70,10 +70,10 @@ const ContactList: React.FC<ListProps> = ({ filter }) => {
       {contacts.map((contact, key) => {
         const { ref, conversation } = contact;
         // Filter by name
-        if (filter && filter !== ref.publicName) {
-          return null;
-        }
-        return (
+        const isMatch = ref.publicName
+          .toLowerCase()
+          .includes(filter.toLowerCase());
+        return isMatch ? (
           <Contact
             avatar={ref.avatar}
             chatId={ref._id}
@@ -84,7 +84,7 @@ const ContactList: React.FC<ListProps> = ({ filter }) => {
             isActive={ref._id === activeChat}
             key={key}
           />
-        );
+        ) : null;
       })}
     </ul>
   );

@@ -1,7 +1,8 @@
-import { createReducer } from 'typesafe-actions';
+import { createReducer, action } from 'typesafe-actions';
 
 import {
   setRedirectToLogin,
+  setFilter,
   showModal,
   showSuccess,
   showNotification
@@ -11,6 +12,7 @@ import { NotificationMessage, ModalName } from './types';
 
 const initialState = {
   redirectToLogin: false,
+  filter: '',
   modal: 'none' as ModalName,
   updateSuccess: false,
   notification: 'none' as NotificationMessage
@@ -21,6 +23,11 @@ export const viewReducer = createReducer(initialState)
   .handleAction(setRedirectToLogin, (state, action) => ({
     ...state,
     redirectToLogin: action.payload
+  }))
+  // Filter sidebar contacts/groups
+  .handleAction(setFilter, (state, action) => ({
+    ...state,
+    filter: action.payload
   }))
   // Show/hide a modal view, only one can be
   // visible at a time, 'none' hides all.

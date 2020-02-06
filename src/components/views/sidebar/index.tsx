@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
 
   function handleSearchbox(event: React.ChangeEvent<HTMLInputElement>): void {
     event.preventDefault();
-    setFilter(event.target.value);
+    setFilter(event.target.value.trimLeft());
   }
 
   return (
