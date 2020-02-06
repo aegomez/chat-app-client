@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -7,6 +7,7 @@ import { SubmitButton } from './buttons';
 import { FormContext } from './contexts';
 import { useDictionary, useTypedSelector } from '../lib';
 import { resetErrors } from '@store/auth/actions';
+import { getAuthErrors } from '@store/auth/selectors';
 
 import { FormProps, ButtonProps } from './types';
 
@@ -24,7 +25,7 @@ const FormContainer: React.FC<FormProps> = ({
   const dispatch = useDispatch();
   const isSuccess = useTypedSelector(state => state.auth.successVisible);
   // Server-side validation errors
-  const errors = useTypedSelector(state => state.auth.errors);
+  const errors = useSelector(getAuthErrors);
 
   // Clear error messages on first render only
   React.useEffect(() => {

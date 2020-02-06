@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Chat } from './chat';
+// import { Chat } from './chat';
 import { Sidebar } from './sidebar';
 import {
   LoadingProfile,
@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
     <section className="columns is-mobile is-fullheight is-marginless">
       <LoadingProfile />
       <Sidebar />
-      <Chat />
+      {/* <Chat /> */}
       <Settings />
       <AddContact />
       <CreateGroup />

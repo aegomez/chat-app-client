@@ -18,6 +18,11 @@ export type RegisterUserKeys = 'name' | 'email' | 'password' | 'password2';
 export type LoginUserSchema = Record<LoginUserKeys, string>;
 export type RegisterUserSchema = Record<RegisterUserKeys, string>;
 
+export interface UpdatePasswordSchema {
+  oldPassword: string;
+  newPassword: string;
+}
+
 // Response Interfaces
 
 export type LoginUserErrors = Record<LoginUserKeys, string | null>;
@@ -29,4 +34,11 @@ export interface LoginResponse {
 
 export interface RegisterResponse {
   register: QueryResponse<RegisterUserErrors>;
+}
+
+export interface UpdatePasswordResponse {
+  updatePassword: {
+    success: boolean;
+    error: string;
+  };
 }

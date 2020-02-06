@@ -3,15 +3,17 @@ import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ModalCard } from './modalCard';
+import { ChangePassword } from './password';
 import { HorizontalControl } from '../forms';
 import { useTypedSelector } from '../lib';
-import { showSettings, showAvatarSuccess } from '@store/view/actions';
+import { showModal, showSuccess } from '@store/view/actions';
 import {
   updateAvatar,
   updateLanguage,
   updatePublicName
 } from '@store/profile/actions';
 import { UserLanguage } from '@api/user/';
+import { failPassword } from '@store/auth/actions';
 
 const m = {
   title: 'Settings',
@@ -20,6 +22,8 @@ const m = {
   avatar: 'Avatar',
   language: 'Language',
   notValid: 'Alias must be 1-40 characters long.',
+  password: 'Password',
+  changePassword: 'Change password',
   save: 'Save',
   success: 'Updated successfully!',
   upload: 'Change image...',
@@ -28,10 +32,8 @@ const m = {
 
 const Settings: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(state => state.view.settingsVisible);
-  const avatarSuccess = useTypedSelector(
-    state => state.view.avatarSuccessVisible
-  );
+  const isVisible = useTypedSelector(state => state.view.modal === 'settings');
+  const avatarSuccess = useTypedSelector(state => state.view.updateSuccess);
   const avatar = useTypedSelector(state => state.profile.avatar);
   const language = useTypedSelector(state => state.profile.language);
   const publicName = useTypedSelector(state => state.profile.publicName);
@@ -43,6 +45,7 @@ const Settings: React.FC = () => {
   const [alias, setAlias] = useState('');
   const [lang, setLang] = useState('');
   const [isValid, setValid] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Copy from redux to internal state at render.
   useEffect(() => {
@@ -54,9 +57,11 @@ const Settings: React.FC = () => {
     // Reset internal state
     setAlias(publicName);
     setLang(language);
+    setShowPassword(false);
     // Reset visibility flags
-    dispatch(showAvatarSuccess(false));
-    dispatch(showSettings(false));
+    dispatch(showSuccess(false));
+    dispatch(showModal('none'));
+    dispatch(failPassword(''));
   }
 
   // On component value changes, update the internal state.
@@ -83,6 +88,7 @@ const Settings: React.FC = () => {
     dispatch(updateLanguage.request(lang as UserLanguage));
   }
 
+  // Show the image upload widget
   function showWidget(): void {
     cloudinary.openUploadWidget(
       {
@@ -105,77 +111,100 @@ const Settings: React.FC = () => {
     );
   }
 
+  // Hide the change password view and
+  // go back to settings
+  function returnFromPassword(): void {
+    setShowPassword(false);
+    dispatch(failPassword(''));
+  }
+
   return isVisible ? (
     <ModalCard cancel={m.cancel} closeHandler={hideModal} title={m.title}>
-      <HorizontalControl label={m.name}>
-        <div className="control">
-          <input
-            type="text"
-            className="input is-static"
-            value={userName}
-            readOnly
-          />
-        </div>
-      </HorizontalControl>
-      <HorizontalControl label={m.alias}>
-        <div className="field has-addons">
-          <div className="control has-icons-left has-icons-right is-expanded">
-            <input
-              type="text"
-              className={'input' + (!isValid ? ' is-danger' : '')}
-              value={alias}
-              onChange={changeAlias}
-            />
-            <span className="icon is-small is-left">
-              <FontAwesomeIcon icon="edit" />
-            </span>
-            {isValid ? null : (
-              <span className="icon is-small is-right">
-                <FontAwesomeIcon icon="exclamation-triangle" />
-              </span>
-            )}
-          </div>
-          <div className="control">
-            <button className="button is-link" onClick={savePublicName}>
-              {m.save}
-            </button>
-          </div>
-        </div>
-        <p className="help is-danger">{isValid ? null : m.notValid}</p>
-      </HorizontalControl>
-      <HorizontalControl label={m.language} bodyClass="has-addons">
-        <div className="control has-icons-left">
-          <div className="select">
-            <select value={lang} onChange={changeLang}>
-              <option value="auto">Auto</option>
-              <option value="en">🇬🇧 - English</option>
-              <option value="es">🇪🇸 - Español</option>
-            </select>
-          </div>
-          <div className="icon is-left">
-            <FontAwesomeIcon icon="globe" />
-          </div>
-        </div>
-        <p className="control">
-          <button className="button is-link" onClick={saveLanguage}>
-            {m.save}
-          </button>
-        </p>
-      </HorizontalControl>
-      <HorizontalControl label={m.avatar}>
-        <div className="control">
-          <figure className="image is-128x128">
-            <img src={avatar} alt="User avatar" />
-          </figure>
-          {avatarSuccess ? (
-            <span className="tag is-success is-medium">{m.success}</span>
-          ) : (
-            <button className="button is-link" onClick={showWidget}>
-              {m.upload}
-            </button>
-          )}
-        </div>
-      </HorizontalControl>
+      {showPassword ? (
+        <ChangePassword closeHandler={returnFromPassword} />
+      ) : (
+        <>
+          <HorizontalControl label={m.name}>
+            <div className="control">
+              <input
+                type="text"
+                className="input is-static"
+                value={userName}
+                readOnly
+              />
+            </div>
+          </HorizontalControl>
+          <HorizontalControl label={m.alias}>
+            <div className="field has-addons">
+              <div className="control has-icons-left has-icons-right is-expanded">
+                <input
+                  type="text"
+                  className={'input' + (!isValid ? ' is-danger' : '')}
+                  value={alias}
+                  onChange={changeAlias}
+                />
+                <span className="icon is-small is-left">
+                  <FontAwesomeIcon icon="edit" />
+                </span>
+                {isValid ? null : (
+                  <span className="icon is-small is-right">
+                    <FontAwesomeIcon icon="exclamation-triangle" />
+                  </span>
+                )}
+              </div>
+              <div className="control">
+                <button className="button is-link" onClick={savePublicName}>
+                  {m.save}
+                </button>
+              </div>
+            </div>
+            <p className="help is-danger">{isValid ? null : m.notValid}</p>
+          </HorizontalControl>
+          <HorizontalControl label={m.password}>
+            <div className="control">
+              <button
+                className="button is-danger"
+                onClick={() => setShowPassword(true)}
+              >
+                {m.changePassword}
+              </button>
+            </div>
+          </HorizontalControl>
+          <HorizontalControl label={m.language} bodyClass="has-addons">
+            <div className="control has-icons-left">
+              <div className="select">
+                <select value={lang} onChange={changeLang}>
+                  <option value="auto">Auto</option>
+                  <option value="en">🇬🇧 - English</option>
+                  <option value="es">🇪🇸 - Español</option>
+                </select>
+              </div>
+              <div className="icon is-left">
+                <FontAwesomeIcon icon="globe" />
+              </div>
+            </div>
+            <p className="control">
+              <button className="button is-link" onClick={saveLanguage}>
+                {m.save}
+              </button>
+            </p>
+          </HorizontalControl>
+          <HorizontalControl label={m.avatar}>
+            <div className="control">
+              <figure className="image is-128x128">
+                <img src={avatar} alt="User avatar" />
+              </figure>
+              {avatarSuccess ? (
+                <span className="tag is-success is-medium">{m.success}</span>
+              ) : (
+                <button className="button is-link" onClick={showWidget}>
+                  {m.upload}
+                </button>
+              )}
+            </div>
+          </HorizontalControl>
+        </>
+      )}
     </ModalCard>
   ) : null;
 };

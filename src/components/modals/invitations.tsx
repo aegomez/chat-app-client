@@ -5,7 +5,7 @@ import { ModalCard } from './modalCard';
 import { useTypedSelector } from '../lib';
 import { updateContact } from '@store/profile/actions';
 import { getPendingContacts } from '@store/profile/selectors';
-import { showInvitations } from '@store/view/actions';
+import { showModal } from '@store/view/actions';
 import { PartialUserSchema, ContactStatus } from '@api/user';
 
 const m = {
@@ -73,7 +73,9 @@ const Invitation: React.FC<InvitationProps> = ({
 // List container
 const Invitations: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(state => state.view.invitationsVisible);
+  const isVisible = useTypedSelector(
+    state => state.view.modal === 'invitations'
+  );
   const pendingContacts = useSelector(getPendingContacts);
   const dispatch = useDispatch();
 
@@ -90,7 +92,7 @@ const Invitations: React.FC = () => {
     dispatch(updateContact.request({ targetId, newStatus: 'accepted' }));
   }
   function hideModal(): void {
-    dispatch(showInvitations(false));
+    dispatch(showModal('none'));
   }
 
   return isVisible ? (

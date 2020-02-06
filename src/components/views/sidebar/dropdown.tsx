@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 
 import { useTypedSelector } from '../../lib';
-import { showLogout, showSettings } from '@store/view/actions';
+import { showModal } from '@store/view/actions';
 
 /* TBD i18n */
 const m = {
@@ -24,13 +24,13 @@ const Dropdown: React.FC = () => {
   function displaySettings(event: React.MouseEvent): void {
     event.preventDefault();
     setDropdownActive(false);
-    dispatch(showSettings(true));
+    dispatch(showModal('settings'));
   }
 
   function displayLogout(event: React.MouseEvent): void {
     event.preventDefault();
     setDropdownActive(false);
-    dispatch(showLogout(true));
+    dispatch(showModal('logout'));
   }
 
   return (

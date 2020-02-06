@@ -1,53 +1,14 @@
-import { all, delay, fork, put, retry } from 'redux-saga/effects';
+import { all, fork, put, retry } from 'redux-saga/effects';
 import { SagaIterator } from 'redux-saga';
 import { call, take } from 'typed-redux-saga';
 
 import * as actions from './actions';
+import { showModal, showSuccess } from '../view/actions';
+import { logoutUser } from '../auth/actions';
+import { NO_SUCCESS, handleErrorSaga } from '../errorHandler';
+
 import * as api from '@api/user';
 import { clearLoggedInFlag } from '@api/browser/storage';
-import {
-  failOperation,
-  failRequest,
-  showAvatarSuccess,
-  showContactSuccess,
-  showGroupSuccess,
-  showLoadingProfile
-} from '@store/view/actions';
-import { logoutUser } from '@store/auth/actions';
-
-// Constants
-const NO_SUCCESS = 'NO_SUCCESS';
-const NOT_AUTHORIZED = 'NOT_AUTHORIZED';
-
-// General error handler
-function* handleErrorSaga(error: Error): SagaIterator {
-  console.log('handleErrorSaga was called');
-  if (error.message === NO_SUCCESS) {
-    // Request was successful, but operation failed
-    // due to a problem with the data or the database.
-    console.error('NO_SUCCESS_ERROR');
-    // Show error to user for 3 seconds, then hide it.
-    yield put(failOperation(true));
-    yield delay(3000);
-    yield put(failOperation(false));
-  } else if (error.message === NOT_AUTHORIZED) {
-    // The cookie is not valid.
-    console.error('NO_AUTH_ERROR: ', error.message);
-    yield all([
-      // Start a logout action
-      put(logoutUser.success()),
-      // Clear local storage flag
-      fork(clearLoggedInFlag)
-    ]);
-  } else {
-    // There was a different error (network, server, etc.)
-    console.error('REQUEST_ERROR');
-    // Show error to user for 3 seconds, then hide it.
-    yield put(failRequest(true));
-    yield delay(3000);
-    yield put(failRequest(false));
-  }
-}
 
 // User Profile
 
@@ -58,7 +19,7 @@ function* getProfileSaga(): SagaIterator {
     // Take the action and show the loading overlay
     // while waiting for a successful response.
     yield* take(actions.getProfile.request);
-    yield put(showLoadingProfile(true));
+    yield put(showModal('loadingProfile'));
     // Try to fetch the API 3 times, with a 10
     // seconds interval between calls.
     const { getUserProfile, error } = yield retry(3, 10000, api.getUserProfile);
@@ -72,11 +33,11 @@ function* getProfileSaga(): SagaIterator {
   } catch (err) {
     // Pass any error to the handler.
     yield* call(handleErrorSaga, err);
-    // After that, dispatch a logout action and clear local storage.
+    // After that, dispatch a logout action and force clear local storage.
     yield all([put(logoutUser.success()), fork(clearLoggedInFlag)]);
   } finally {
     // Hide the loading overlay
-    yield put(showLoadingProfile(false));
+    yield put(showModal('none'));
   }
 }
 
@@ -87,10 +48,7 @@ function* addContactSaga(): SagaIterator {
   const { addContact, error } = yield* call(api.addContact, action.payload);
 
   if (addContact?.success) {
-    yield all([
-      put(actions.addContact.success()),
-      put(showContactSuccess(true))
-    ]);
+    yield all([put(actions.addContact.success()), put(showSuccess(true))]);
   } else {
     throw Error(error || NO_SUCCESS);
   }
@@ -130,7 +88,7 @@ function* createGroupSaga(): SagaIterator {
       put(
         actions.createGroup.success({ _id, conversation, ...action.payload })
       ),
-      put(showGroupSuccess(true))
+      put(showSuccess(true))
     ]);
   } else {
     throw Error(error || NO_SUCCESS);
@@ -179,7 +137,7 @@ function* updateAvatarSaga(): SagaIterator {
   if (updateUserAvatar?.success) {
     yield all([
       put(actions.updateAvatar.success(payload)),
-      put(showAvatarSuccess(true))
+      put(showSuccess(true))
     ]);
   } else {
     throw Error(error || NO_SUCCESS);

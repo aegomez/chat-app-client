@@ -4,7 +4,8 @@ import {
   LoginUserErrors,
   LoginUserSchema,
   RegisterUserErrors,
-  RegisterUserSchema
+  RegisterUserSchema,
+  UpdatePasswordSchema
 } from '@api/auth';
 
 // Async action creators
@@ -30,6 +31,10 @@ export const logoutUser = createAsyncAction(
 // Standard action creators
 
 export const resetErrors = createAction('auth/resetErrors')<undefined>();
-export const showRegisterSuccess = createAction('auth/showRegisterSuccess')<
-  boolean
+export const showAuthSuccess = createAction('auth/showSuccess')<boolean>();
+
+// Call the auth API to update the user password
+export const updatePassword = createAction('auth/updatePassword')<
+  UpdatePasswordSchema
 >();
+export const failPassword = createAction('auth/badPassword')<string>();

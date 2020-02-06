@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux';
 
 import { useTypedSelector } from '../lib';
 import { logoutUser } from '@store/auth/actions';
-import { showLogout } from '@store/view/actions';
-import { Modal } from './Modal';
+import { showModal } from '@store/view/actions';
+import { Modal } from './modal';
 
 const m = {
   title: 'Logout',
@@ -15,12 +15,12 @@ const m = {
 
 const Logout: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(state => state.view.logoutVisible);
+  const isVisible = useTypedSelector(state => state.view.modal === 'logout');
   const dispatch = useDispatch();
 
   // Dispatch actions on button press
   function handleCancel(): void {
-    dispatch(showLogout(false));
+    dispatch(showModal('none'));
   }
   function handleConfirm(): void {
     dispatch(logoutUser.request());

@@ -1,10 +1,13 @@
 import React from 'react';
-import { Modal } from './Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { Modal } from './modal';
 import { useTypedSelector } from '../lib';
 
 const LoadingProfile: React.FC = () => {
-  const isLoading = useTypedSelector(state => state.view.loadingProfile);
+  const isLoading = useTypedSelector(
+    state => state.view.modal === 'loadingProfile'
+  );
   return isLoading ? (
     <Modal closeHandler={() => {}}>
       <div className="container is-clipped has-text-centered">

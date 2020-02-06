@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { ModalCard } from './modalCard';
 import { useTypedSelector } from '../lib';
-import { showCreateGroup, showGroupSuccess } from '@store/view/actions';
+import { showModal, showSuccess } from '@store/view/actions';
 import { createGroup } from '@store/profile/actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -22,8 +22,10 @@ const m = {
 
 const CreateGroup: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(state => state.view.createGroupVisible);
-  const isSuccess = useTypedSelector(state => state.view.groupSuccessVisible);
+  const isVisible = useTypedSelector(
+    state => state.view.modal === 'createGroup'
+  );
+  const isSuccess = useTypedSelector(state => state.view.updateSuccess);
   const dispatch = useDispatch();
 
   // Internal state
@@ -44,8 +46,8 @@ const CreateGroup: React.FC = () => {
   // Dispatch redux actions
   function hideModal(): void {
     setName('');
-    dispatch(showGroupSuccess(false));
-    dispatch(showCreateGroup(false));
+    dispatch(showSuccess(false));
+    dispatch(showModal('none'));
   }
   function sendRequest(): void {
     if (isValid) {

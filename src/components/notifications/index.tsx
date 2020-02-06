@@ -2,44 +2,43 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useTypedSelector } from '../lib';
-import { failOperation, failRequest } from '@store/view/actions';
+import { showNotification } from '@store/view/actions';
+import { NotificationMessage } from '@store/view/types';
 
-const m = {
-  failedOperation: 'Operation failed!',
-  failedRequest:
-    'Network error! Check if you are connected to the Internet, or try again later.'
+const m: Record<NotificationMessage, string> = {
+  'no-success': 'Operation failed!',
+  'no-auth': "We couldn't verify your identity, please login again.",
+  network:
+    'Network error! Check if you are connected to the Internet, or try again later.',
+  unknown: 'Something went wrong...',
+  success: 'Operation was completed successfully!',
+  none: ''
 };
 
-const FailedOperation: React.FC = () => {
+/**
+ * Window notification controlled by the redux
+ * state. Can only display pre-defined messages.
+ */
+const Notification: React.FC = () => {
   const dispatch = useDispatch();
-  const isVisible = useTypedSelector(
-    state => state.view.failedOperationVisible
-  );
+  const message = useTypedSelector(state => state.view.notification);
 
-  return isVisible ? (
-    <div className="notification is-danger is-marginless">
-      <button
-        className="delete"
-        onClick={() => dispatch(failOperation(false))}
-      ></button>
-      {m.failedOperation}
-    </div>
-  ) : null;
+  if (message === 'none') {
+    return null;
+  } else {
+    const className = `notification is-marginless is-${
+      message === 'success' ? 'success' : 'danger'
+    }`;
+    return (
+      <div className={className}>
+        <button
+          className="delete"
+          onClick={() => dispatch(showNotification('none'))}
+        ></button>
+        {m[message]}
+      </div>
+    );
+  }
 };
 
-const FailedRequest: React.FC = () => {
-  const dispatch = useDispatch();
-  const isVisible = useTypedSelector(state => state.view.failedRequestVisible);
-
-  return isVisible ? (
-    <div className="notification is-danger is-marginless">
-      <button
-        className="delete"
-        onClick={() => dispatch(failRequest(false))}
-      ></button>
-      {m.failedRequest}
-    </div>
-  ) : null;
-};
-
-export { FailedOperation, FailedRequest };
+export { Notification };

@@ -6,9 +6,13 @@ import {
   loginUser,
   logoutUser,
   registerUser,
-  showRegisterSuccess
+  showAuthSuccess,
+  updatePassword,
+  failPassword
 } from './actions';
-import { setRedirectToLogin } from '@store/view/actions';
+import { setRedirectToLogin } from '../view/actions';
+import { handleErrorSaga, NOT_AUTHORIZED } from '../errorHandler';
+
 import * as authApi from '@api/auth';
 import { updateUserConnected } from '@api/user';
 import { setLoggedInFlag, clearLoggedInFlag } from '@api/browser/storage';
@@ -22,15 +26,12 @@ function* registerUserSaga(
     if (data.success) {
       yield put(registerUser.success());
       yield delay(2000);
-      yield all([
-        put(showRegisterSuccess(false)),
-        put(setRedirectToLogin(true))
-      ]);
+      yield all([put(showAuthSuccess(false)), put(setRedirectToLogin(true))]);
     } else {
       yield put(registerUser.failure(data.errors));
     }
   } catch (error) {
-    console.error('>>> loginUserSaga : fatalError', error);
+    yield* call(handleErrorSaga, error);
   }
 }
 
@@ -46,7 +47,7 @@ function* loginUserSaga(
       yield put(loginUser.failure(data.errors));
     }
   } catch (error) {
-    console.error('>>> loginUserSaga : fatalError', error);
+    yield* call(handleErrorSaga, error);
   }
 }
 
@@ -60,14 +61,38 @@ function* logoutUserSaga(): SagaIterator<void> {
       yield put(logoutUser.failure());
     }
   } catch (error) {
-    console.error('>>> logoutUserSaga : fatalError', error);
+    yield* call(handleErrorSaga, error);
+  }
+}
+
+function* updatePasswordSaga(
+  action: ReturnType<typeof updatePassword>
+): SagaIterator<void> {
+  try {
+    const response = yield* call(authApi.updatePassword, action.payload);
+    const { success, error } = response.updatePassword;
+    if (success) {
+      // Show success notification
+      yield put(showAuthSuccess(true));
+      yield delay(2500);
+      yield put(showAuthSuccess(false));
+    } else if (error === NOT_AUTHORIZED || typeof error !== 'string') {
+      // Token is not-valid or request error.
+      throw Error('' + error);
+    } else {
+      // Wrong password, not-valid newPassword,
+      // or passwords are the same.
+      yield put(failPassword(error));
+    }
+  } catch (error) {
+    // Network/request error
+    yield* call(handleErrorSaga, error);
   }
 }
 
 export function* watchAuthSagas(): SagaIterator<void> {
-  // while (true) {
   yield takeLatest(loginUser.request, loginUserSaga);
   yield takeLatest(logoutUser.request, logoutUserSaga);
   yield takeLatest(registerUser.request, registerUserSaga);
-  // }
+  yield takeLatest(updatePassword, updatePasswordSaga);
 }

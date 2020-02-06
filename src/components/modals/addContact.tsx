@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { ModalCard } from './modalCard';
 import { useTypedSelector } from '../lib';
-import { showAddContact, showContactSuccess } from '@store/view/actions';
+import { showModal, showSuccess } from '@store/view/actions';
 import { addContact } from '@store/profile/actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -19,8 +19,10 @@ const m = {
 
 const AddContact: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(state => state.view.addContactVisible);
-  const isSuccess = useTypedSelector(state => state.view.contactSuccessVisible);
+  const isVisible = useTypedSelector(
+    state => state.view.modal === 'addContact'
+  );
+  const isSuccess = useTypedSelector(state => state.view.updateSuccess);
   const dispatch = useDispatch();
 
   // Internal state
@@ -46,8 +48,8 @@ const AddContact: React.FC = () => {
   // Dispatch redux actions
   function hideModal(): void {
     setQuery('');
-    dispatch(showContactSuccess(false));
-    dispatch(showAddContact(false));
+    dispatch(showSuccess(false));
+    dispatch(showModal('none'));
   }
   function sendRequest(): void {
     if (isValid) {

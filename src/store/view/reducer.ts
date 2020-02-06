@@ -2,33 +2,18 @@ import { createReducer } from 'typesafe-actions';
 
 import {
   setRedirectToLogin,
-  showLoadingProfile,
-  showLogout,
-  showSettings,
-  showAvatarSuccess,
-  showAddContact,
-  showContactSuccess,
-  showCreateGroup,
-  showGroupSuccess,
-  showInvitations,
-  failOperation,
-  failRequest
+  showModal,
+  showSuccess,
+  showNotification
 } from './actions';
 import { logoutUser } from '../auth/actions';
+import { NotificationMessage, ModalName } from './types';
 
 const initialState = {
   redirectToLogin: false,
-  loadingProfile: false,
-  failedRequestVisible: false,
-  failedOperationVisible: false,
-  settingsVisible: false,
-  avatarSuccessVisible: false,
-  logoutVisible: false,
-  addContactVisible: false,
-  contactSuccessVisible: false,
-  createGroupVisible: false,
-  invitationsVisible: false,
-  groupSuccessVisible: false
+  modal: 'none' as ModalName,
+  updateSuccess: false,
+  notification: 'none' as NotificationMessage
 };
 
 export const viewReducer = createReducer(initialState)
@@ -37,60 +22,21 @@ export const viewReducer = createReducer(initialState)
     ...state,
     redirectToLogin: action.payload
   }))
-  // Show/hide the loading profile spinner
-  .handleAction(showLoadingProfile, (state, action) => ({
+  // Show/hide a modal view, only one can be
+  // visible at a time, 'none' hides all.
+  .handleAction(showModal, (state, action) => ({
     ...state,
-    loadingProfile: action.payload
+    modal: action.payload
   }))
-  // After an operation failure (success === false),
-  // show a notification.
-  .handleAction(failOperation, (state, action) => ({
+  // Show success notification after updating settings
+  .handleAction(showSuccess, (state, action) => ({
     ...state,
-    failedOperationVisible: action.payload
+    updateSuccess: action.payload
   }))
-  // After any other request failure,
-  // show a notification.
-  .handleAction(failRequest, (state, action) => ({
+  // Show notifications after requests
+  .handleAction(showNotification, (state, action) => ({
     ...state,
-    failedRequestVisible: action.payload
-  }))
-  // Show/hide the settings view
-  .handleAction(showSettings, (state, action) => ({
-    ...state,
-    settingsVisible: action.payload
-  }))
-  // Show success notification after updating avatar
-  .handleAction(showAvatarSuccess, (state, action) => ({
-    ...state,
-    avatarSuccessVisible: action.payload
-  }))
-  // Show/hide the logout confirmation view
-  .handleAction(showLogout, (state, action) => ({
-    ...state,
-    logoutVisible: action.payload
-  }))
-  // Show/hide the add contact view
-  .handleAction(showAddContact, (state, action) => ({
-    ...state,
-    addContactVisible: action.payload
-  }))
-  .handleAction(showContactSuccess, (state, action) => ({
-    ...state,
-    contactSuccessVisible: action.payload
-  }))
-  // Show/hide the create group view
-  .handleAction(showCreateGroup, (state, action) => ({
-    ...state,
-    createGroupVisible: action.payload
-  }))
-  .handleAction(showGroupSuccess, (state, action) => ({
-    ...state,
-    groupSuccessVisible: action.payload
-  }))
-  // Show/hide the accept/hide contacts modal
-  .handleAction(showInvitations, (state, action) => ({
-    ...state,
-    invitationsVisible: action.payload
+    notification: action.payload
   }))
   // On a logout action, reset the state.
   .handleAction(logoutUser.success, () => initialState);

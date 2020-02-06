@@ -1,5 +1,7 @@
 import { createAction } from 'typesafe-actions';
 
+import { NotificationMessage, ModalName } from './types';
+
 // Standard action creators
 
 // After a successful register, automatically redirect to /login
@@ -7,39 +9,14 @@ export const setRedirectToLogin = createAction('view/setRegisterRedirect')<
   boolean
 >();
 
-// Show/hide the loading profile spinner
-export const showLoadingProfile = createAction('view/loadingProfile')<
-  boolean
+// Show/hide a modal view, only one can be
+// visible at a time, 'none' hides all.
+export const showModal = createAction('view/showModal')<ModalName>();
+
+// Show/hide specific success messages
+export const showSuccess = createAction('view/showSuccess')<boolean>();
+
+// Show/hide notifications after a request
+export const showNotification = createAction('view/notification')<
+  NotificationMessage
 >();
-
-// Show/hide the settings view
-export const showSettings = createAction('view/showSettings')<boolean>();
-
-// Show avatar update success
-export const showAvatarSuccess = createAction('view/showAvatarSuccess')<
-  boolean
->();
-
-// Show/hide the logout confirmation
-export const showLogout = createAction('view/showLogout')<boolean>();
-
-// Show/hide the add-contact modal
-export const showAddContact = createAction('view/showAddContact')<boolean>();
-export const showContactSuccess = createAction('view/showContactSuccess')<
-  boolean
->();
-
-// Show/hide the create-group modal
-export const showCreateGroup = createAction('view/showCreateGroup')<boolean>();
-export const showGroupSuccess = createAction('view/showGroupSuccess')<
-  boolean
->();
-
-// Show/hide the accept/hide contacts modal
-export const showInvitations = createAction('view/showInvitations')<boolean>();
-
-// Show operation unsuccessful action creator
-export const failOperation = createAction('view/failOperation')<boolean>();
-
-// General request failure action creator
-export const failRequest = createAction('view/failRequest')<boolean>();

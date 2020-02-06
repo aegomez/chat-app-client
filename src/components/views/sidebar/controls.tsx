@@ -2,11 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  showAddContact,
-  showCreateGroup,
-  showInvitations
-} from '@store/view/actions';
+import { showModal } from '@store/view/actions';
 import { getNumberOfPendingContacts } from '@store/profile/selectors';
 
 /* TBD i18n */
@@ -22,17 +18,17 @@ const Controls: React.FC = () => {
 
   function displayAddContact(event: React.MouseEvent): void {
     event.preventDefault();
-    dispatch(showAddContact(true));
+    dispatch(showModal('addContact'));
   }
 
   function displayCreateGroup(event: React.MouseEvent): void {
     event.preventDefault();
-    dispatch(showCreateGroup(true));
+    dispatch(showModal('createGroup'));
   }
 
   function displayInvitations(event: React.MouseEvent): void {
     event.preventDefault();
-    dispatch(showInvitations(true));
+    dispatch(showModal('invitations'));
   }
 
   return (
