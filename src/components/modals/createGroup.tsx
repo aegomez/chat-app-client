@@ -22,9 +22,6 @@ const m = {
 
 const CreateGroup: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(
-    state => state.view.modal === 'createGroup'
-  );
   const isSuccess = useTypedSelector(state => state.view.updateSuccess);
   const dispatch = useDispatch();
 
@@ -77,7 +74,7 @@ const CreateGroup: React.FC = () => {
     );
   }
 
-  return isVisible ? (
+  return (
     <ModalCard
       title={m.title}
       cancel={m.cancel}
@@ -121,7 +118,7 @@ const CreateGroup: React.FC = () => {
         </div>
       ) : null}
     </ModalCard>
-  ) : null;
+  );
 };
 
 export { CreateGroup };

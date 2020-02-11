@@ -32,7 +32,6 @@ const m = {
 
 const Settings: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(state => state.view.modal === 'settings');
   const avatarSuccess = useTypedSelector(state => state.view.updateSuccess);
   const avatar = useTypedSelector(state => state.profile.avatar);
   const language = useTypedSelector(state => state.profile.language);
@@ -118,7 +117,7 @@ const Settings: React.FC = () => {
     dispatch(failPassword(''));
   }
 
-  return isVisible ? (
+  return (
     <ModalCard cancel={m.cancel} closeHandler={hideModal} title={m.title}>
       {showPassword ? (
         <ChangePassword closeHandler={returnFromPassword} />
@@ -206,7 +205,7 @@ const Settings: React.FC = () => {
         </>
       )}
     </ModalCard>
-  ) : null;
+  );
 };
 
 export { Settings };

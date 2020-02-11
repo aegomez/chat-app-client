@@ -73,9 +73,6 @@ const Invitation: React.FC<InvitationProps> = ({
 // List container
 const Invitations: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(
-    state => state.view.modal === 'invitations'
-  );
   const pendingContacts = useSelector(getPendingContacts);
   const dispatch = useDispatch();
 
@@ -95,7 +92,7 @@ const Invitations: React.FC = () => {
     dispatch(showModal('none'));
   }
 
-  return isVisible ? (
+  return (
     <ModalCard title={m.title} cancel={m.cancel} closeHandler={hideModal}>
       <p className="content">{m.subtitle}</p>
       <ul>
@@ -121,7 +118,7 @@ const Invitations: React.FC = () => {
         </div>
       </div>
     </ModalCard>
-  ) : null;
+  );
 };
 
 export { Invitations };

@@ -19,9 +19,6 @@ const m = {
 
 const AddContact: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(
-    state => state.view.modal === 'addContact'
-  );
   const isSuccess = useTypedSelector(state => state.view.updateSuccess);
   const dispatch = useDispatch();
 
@@ -57,7 +54,7 @@ const AddContact: React.FC = () => {
     }
   }
 
-  return isVisible ? (
+  return (
     <ModalCard
       title={m.title}
       cancel={m.cancel}
@@ -89,7 +86,7 @@ const AddContact: React.FC = () => {
         </div>
       ) : null}
     </ModalCard>
-  ) : null;
+  );
 };
 
 export { AddContact };

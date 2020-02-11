@@ -1,16 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-// import { Chat } from './chat';
+import { Chat } from './chat';
 import { Sidebar } from './sidebar';
-import {
-  LoadingProfile,
-  Settings,
-  AddContact,
-  CreateGroup,
-  Invitations,
-  Logout
-} from '../modals';
+import { ModalManager } from '../modals';
 import { getProfile } from '@store/profile/actions';
 
 const Dashboard: React.FC = () => {
@@ -20,16 +13,11 @@ const Dashboard: React.FC = () => {
     dispatch(getProfile.request());
   });
   return (
-    <section className="columns is-mobile is-fullheight is-marginless">
-      <LoadingProfile />
+    <main className="columns is-mobile is-fullheight is-marginless">
       <Sidebar />
-      {/* <Chat /> */}
-      <Settings />
-      <AddContact />
-      <CreateGroup />
-      <Invitations />
-      <Logout />
-    </section>
+      <Chat />
+      <ModalManager />
+    </main>
   );
 };
 

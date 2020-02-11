@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Landing: React.FC = () => (
-  <div className="container">
+  <main className="container">
     <section className="section columns is-vcentered">
       <div className="column">
         <h4 className="title is-size-2">The Chat with No Name</h4>
@@ -22,7 +22,7 @@ const Landing: React.FC = () => (
         <figure className="image is-square has-background-dark"></figure>
       </div>
     </section>
-  </div>
+  </main>
 );
 
 export { Landing };

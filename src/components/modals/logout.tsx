@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import { useTypedSelector } from '../lib';
 import { logoutUser } from '@store/auth/actions';
 import { showModal } from '@store/view/actions';
 import { Modal } from './modal';
@@ -15,7 +14,6 @@ const m = {
 
 const Logout: React.FC = () => {
   // Redux state
-  const isVisible = useTypedSelector(state => state.view.modal === 'logout');
   const dispatch = useDispatch();
 
   // Dispatch actions on button press
@@ -26,7 +24,7 @@ const Logout: React.FC = () => {
     dispatch(logoutUser.request());
   }
 
-  return isVisible ? (
+  return (
     <Modal closeHandler={handleCancel}>
       <div className="box">
         <p className="title">{m.title}</p>
@@ -41,7 +39,7 @@ const Logout: React.FC = () => {
         </div>
       </div>
     </Modal>
-  ) : null;
+  );
 };
 
 export { Logout };
