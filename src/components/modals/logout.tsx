@@ -7,9 +7,7 @@ import { Modal } from './modal';
 
 const m = {
   title: 'Logout',
-  message: 'Are you sure you want to log out?',
-  confirm: 'OK',
-  cancel: 'Cancel'
+  message: 'Are you sure you want to log out?'
 };
 
 const Logout: React.FC = () => {
@@ -25,20 +23,12 @@ const Logout: React.FC = () => {
   }
 
   return (
-    <Modal closeHandler={handleCancel}>
-      <div className="box">
-        <p className="title">{m.title}</p>
-        <p className="subtitle">{m.message}</p>
-        <div className="buttons is-right">
-          <button className="button is-info" onClick={handleConfirm}>
-            {m.confirm}
-          </button>
-          <button className="button is-danger" onClick={handleCancel}>
-            {m.cancel}
-          </button>
-        </div>
-      </div>
-    </Modal>
+    <Modal
+      closeHandler={handleCancel}
+      confirmHandler={handleConfirm}
+      title={m.title}
+      subtitle={m.message}
+    />
   );
 };
 

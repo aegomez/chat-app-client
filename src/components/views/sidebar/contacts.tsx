@@ -38,7 +38,7 @@ const Contact: React.FC<ContactProps> = ({
       >
         <figure className="media-left">
           <span className="image is-24x24">
-            <img src={avatar} alt="User avatar" />
+            <img src={avatar} title="User avatar" />
           </span>
         </figure>
         <span className="media-content">{name}</span>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Dropdown } from './dropdown';
-import { SearchBox } from './searchbox';
+import { SearchBox } from '../../forms';
 import { Controls } from './controls';
 import { ContactList } from './contacts';
 import { GroupList } from './groups';
@@ -21,12 +21,12 @@ const Sidebar: React.FC = () => {
   }
 
   return (
-    <aside className="column is-one-quarter has-background-dark">
+    <aside className="column is-one-quarter has-background-dark is-flex-column">
       <Dropdown />
       <SearchBox handleChange={handleSearchbox} />
-      <div className="menu is-dark has-text-weight-bold">
+      <div className="menu is-dark is-scroll">
         <Controls />
-        <p className="menu-label">{m.contactsLabel}</p>
+        <p className="menu-label  has-text-weight-bold">{m.contactsLabel}</p>
         <ul className="menu-list">
           <li>
             <ContactList filter={searchFilter} />

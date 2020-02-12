@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 /* TBD i18n */
 const m = {
-  search: 'Search conversation'
+  search: 'Search contact'
 };
 
 interface SearchProps {

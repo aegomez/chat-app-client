@@ -42,7 +42,7 @@ const Dropdown: React.FC = () => {
     >
       <div className="dropdown-trigger">
         <button
-          className="button is-fullwidth is-medium is-dark has-text-weight-bold"
+          className="button is-fullwidth is-medium is-dark has-text-weight-semibold"
           onClick={showDropdown}
         >
           <span>{publicName}</span>

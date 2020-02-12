@@ -114,7 +114,7 @@ const CreateGroup: React.FC = () => {
       </div>
       {isSuccess ? (
         <div className="field">
-          <p className="content is-success">{m.success}</p>
+          <p className="content has-background-success">{m.success}</p>
         </div>
       ) : null}
     </ModalCard>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ModalCard } from './modalCard';
-import { useTypedSelector } from '../lib';
 import { updateContact } from '@store/profile/actions';
 import { getPendingContacts } from '@store/profile/selectors';
 import { showModal } from '@store/view/actions';
