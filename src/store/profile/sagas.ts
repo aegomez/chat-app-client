@@ -1,9 +1,9 @@
-import { all, fork, put, retry } from 'redux-saga/effects';
+import { all, delay, fork, put, retry, takeEvery } from 'redux-saga/effects';
 import { SagaIterator } from 'redux-saga';
-import { call, take } from 'typed-redux-saga';
+import { call } from 'typed-redux-saga';
 
 import * as actions from './actions';
-import { showModal, showSuccess } from '../view/actions';
+import { showModal, showSuccess, showNotification } from '../view/actions';
 import { logoutUser } from '../auth/actions';
 import { NO_SUCCESS, handleErrorSaga } from '../errorHandler';
 
@@ -18,7 +18,6 @@ function* getProfileSaga(): SagaIterator {
   try {
     // Take the action and show the loading overlay
     // while waiting for a successful response.
-    yield* take(actions.getProfile.request);
     yield put(showModal('loadingProfile'));
     // Try to fetch the API 3 times, with a 10
     // seconds interval between calls.
@@ -43,160 +42,203 @@ function* getProfileSaga(): SagaIterator {
 
 // Contacts
 
-function* addContactSaga(): SagaIterator {
-  const action = yield* take(actions.addContact.request);
-  const { addContact, error } = yield* call(api.addContact, action.payload);
+function* addContactSaga(
+  action: ReturnType<typeof actions.addContact.request>
+): SagaIterator {
+  try {
+    const { addContact, error } = yield* call(api.addContact, action.payload);
 
-  if (addContact?.success) {
-    yield all([put(actions.addContact.success()), put(showSuccess(true))]);
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (addContact?.success) {
+      yield all([put(actions.addContact.success()), put(showSuccess(true))]);
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
-function* deleteContactSaga(): SagaIterator {
-  const { payload } = yield* take(actions.deleteContact.request);
-  const { deleteContact, error } = yield* call(api.deleteContact, payload);
+function* deleteContactSaga(
+  action: ReturnType<typeof actions.deleteContact.request>
+): SagaIterator {
+  try {
+    const { deleteContact, error } = yield* call(
+      api.deleteContact,
+      action.payload
+    );
 
-  if (deleteContact?.success) {
-    yield put(actions.deleteContact.success(payload));
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (deleteContact?.success) {
+      yield put(actions.deleteContact.success(action.payload));
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
-function* updateContactSaga(): SagaIterator {
-  const { payload } = yield* take(actions.updateContact.request);
-  const { updateContact, error } = yield* call(api.updateContact, payload);
+function* updateContactSaga(
+  action: ReturnType<typeof actions.updateContact.request>
+): SagaIterator {
+  try {
+    const { updateContact, error } = yield* call(
+      api.updateContact,
+      action.payload
+    );
 
-  if (updateContact?.success) {
-    yield put(actions.updateContact.success(payload));
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (updateContact?.success) {
+      yield put(actions.updateContact.success(action.payload));
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
 // Groups
 
-function* createGroupSaga(): SagaIterator {
-  const action = yield* take(actions.createGroup.request);
-  const { createGroup, error } = yield* call(api.createGroup, action.payload);
+function* createGroupSaga(
+  action: ReturnType<typeof actions.createGroup.request>
+): SagaIterator {
+  try {
+    const { createGroup, error } = yield* call(api.createGroup, action.payload);
 
-  if (createGroup?.success) {
-    const { _id, conversation } = createGroup;
-    yield all([
-      put(
-        actions.createGroup.success({ _id, conversation, ...action.payload })
-      ),
-      put(showSuccess(true))
-    ]);
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (createGroup?.success) {
+      const { _id, conversation } = createGroup;
+      yield all([
+        put(
+          actions.createGroup.success({ _id, conversation, ...action.payload })
+        ),
+        put(showSuccess(true))
+      ]);
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
-function* addGroupMemberSaga(): SagaIterator {
-  const { payload } = yield* take(actions.addGroupMember.request);
-  const { addGroupMember, error } = yield* call(api.addGroupMember, payload);
-
-  if (addGroupMember?.success) {
-    yield put(
-      actions.addGroupMember.success({
-        groupId: payload.groupId,
-        ...addGroupMember.newMember
-      })
+function* addGroupMemberSaga(
+  action: ReturnType<typeof actions.addGroupMember.request>
+): SagaIterator {
+  try {
+    const { addGroupMember, error } = yield* call(
+      api.addGroupMember,
+      action.payload
     );
-  } else {
-    throw Error(error || NO_SUCCESS);
+
+    if (addGroupMember?.success) {
+      yield put(
+        actions.addGroupMember.success({
+          groupId: action.payload.groupId,
+          ...addGroupMember.newMember
+        })
+      );
+      yield put(showNotification('success'));
+      yield delay(2500);
+      yield put(showNotification('none'));
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
-function* deleteGroupMemberSaga(): SagaIterator {
-  const { payload } = yield* take(actions.deleteGroupMember.request);
-  const { deleteGroupMember, error } = yield* call(
-    api.deleteGroupMember,
-    payload
-  );
+function* deleteGroupMemberSaga(
+  action: ReturnType<typeof actions.deleteGroupMember.request>
+): SagaIterator {
+  try {
+    const { deleteGroupMember, error } = yield* call(
+      api.deleteGroupMember,
+      action.payload
+    );
 
-  if (deleteGroupMember?.success) {
-    yield put(actions.deleteGroupMember.success(payload));
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (deleteGroupMember?.success) {
+      yield put(actions.deleteGroupMember.success(action.payload));
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
 // User Settings
 
-function* updateAvatarSaga(): SagaIterator {
-  const { payload } = yield* take(actions.updateAvatar.request);
-  const { updateUserAvatar, error } = yield* call(
-    api.updateUserAvatar,
-    payload
-  );
+function* updateAvatarSaga(
+  action: ReturnType<typeof actions.updateAvatar.request>
+): SagaIterator {
+  try {
+    const { updateUserAvatar, error } = yield* call(
+      api.updateUserAvatar,
+      action.payload
+    );
 
-  if (updateUserAvatar?.success) {
-    yield all([
-      put(actions.updateAvatar.success(payload)),
-      put(showSuccess(true))
-    ]);
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (updateUserAvatar?.success) {
+      yield all([
+        put(actions.updateAvatar.success(action.payload)),
+        put(showSuccess(true))
+      ]);
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
-function* updateLanguageSaga(): SagaIterator {
-  const { payload } = yield* take(actions.updateLanguage.request);
-  const { updateUserLanguage, error } = yield* call(
-    api.updateUserLanguage,
-    payload
-  );
+function* updateLanguageSaga(
+  action: ReturnType<typeof actions.updateLanguage.request>
+): SagaIterator {
+  try {
+    const { updateUserLanguage, error } = yield* call(
+      api.updateUserLanguage,
+      action.payload
+    );
 
-  if (updateUserLanguage?.success) {
-    yield put(actions.updateLanguage.success(payload));
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (updateUserLanguage?.success) {
+      yield put(actions.updateLanguage.success(action.payload));
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
-function* updatePublicNameSaga(): SagaIterator {
-  const { payload } = yield* take(actions.updatePublicName.request);
-  const { updateUserPublicName, error } = yield* call(
-    api.updateUserPublicName,
-    payload
-  );
+function* updatePublicNameSaga(
+  action: ReturnType<typeof actions.updatePublicName.request>
+): SagaIterator {
+  try {
+    const { updateUserPublicName, error } = yield* call(
+      api.updateUserPublicName,
+      action.payload
+    );
 
-  if (updateUserPublicName?.success) {
-    yield put(actions.updatePublicName.success(payload));
-  } else {
-    throw Error(error || NO_SUCCESS);
+    if (updateUserPublicName?.success) {
+      yield put(actions.updatePublicName.success(action.payload));
+    } else {
+      throw Error(error || NO_SUCCESS);
+    }
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
   }
 }
 
 export function* watchProfileSagas(): SagaIterator<void> {
-  const sagas = [
-    getProfileSaga,
-    addContactSaga,
-    deleteContactSaga,
-    updateContactSaga,
-    createGroupSaga,
-    addGroupMemberSaga,
-    deleteGroupMemberSaga,
-    updateAvatarSaga,
-    updateLanguageSaga,
-    updatePublicNameSaga
-  ];
-
-  yield all(
-    sagas.map(saga =>
-      fork(function*() {
-        while (true) {
-          try {
-            yield* call(saga);
-          } catch (error) {
-            yield* call(handleErrorSaga, error);
-          }
-        }
-      })
-    )
-  );
+  yield all([
+    takeEvery(actions.getProfile.request, getProfileSaga),
+    takeEvery(actions.addContact.request, addContactSaga),
+    takeEvery(actions.deleteContact.request, deleteContactSaga),
+    takeEvery(actions.updateContact.request, updateContactSaga),
+    takeEvery(actions.createGroup.request, createGroupSaga),
+    takeEvery(actions.addGroupMember.request, addGroupMemberSaga),
+    takeEvery(actions.deleteGroupMember.request, deleteGroupMemberSaga),
+    takeEvery(actions.updateAvatar.request, updateAvatarSaga),
+    takeEvery(actions.updateLanguage.request, updateLanguageSaga),
+    takeEvery(actions.updatePublicName.request, updatePublicNameSaga)
+  ]);
 }
