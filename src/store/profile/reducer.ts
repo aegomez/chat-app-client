@@ -84,31 +84,49 @@ export const profileReducer = createReducer(initialState)
   // Find a group by id and, if it exists, add a new member.
   .handleAction(addGroupMember.success, (state, action) => {
     const { groupId, ...newMember } = action.payload;
-    const groups = state.groups.slice();
-    const found = groups.find(obj => obj.ref._id === groupId);
-    if (!found) {
+    const newGroups = state.groups.slice();
+    const index = newGroups.findIndex(obj => obj.ref._id === groupId);
+    if (index < 0) {
       return state;
     }
-    found.ref.members.push(newMember);
-    return { ...state, groups };
+    const found = state.groups[index];
+    newGroups[index] = {
+      joined: found.joined,
+      ref: {
+        ...found.ref,
+        members: found.ref.members.slice().concat(newMember)
+      }
+    };
+    return { ...state, groups: newGroups };
   })
 
   // Find a group and one of its members by id.
   // If both exist, remove the member from group.
   .handleAction(deleteGroupMember.success, (state, action) => {
     const { groupId, userId } = action.payload;
-    const groups = state.groups.slice();
-    const foundGroup = groups.find(obj => obj.ref._id === groupId);
-    if (!foundGroup) {
+    const newGroups = state.groups.slice();
+    const groupIndex = newGroups.findIndex(obj => obj.ref._id === groupId);
+    if (!groupIndex) {
       return state;
     }
+    const foundGroup = state.groups[groupIndex];
     const members = foundGroup.ref.members;
     const userIndex = members.findIndex(obj => obj._id === userId);
     if (userIndex < 0) {
       return state;
     }
+    newGroups[groupIndex] = {
+      joined: foundGroup.joined,
+      ref: {
+        ...foundGroup.ref,
+        members: [
+          ...members.slice(0, userIndex),
+          ...members.slice(userIndex + 1, members.length)
+        ]
+      }
+    };
     members.splice(userIndex, 1);
-    return { ...state, groups };
+    return { ...state, groups: newGroups };
   })
 
   // User settings actions
