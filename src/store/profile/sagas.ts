@@ -1,6 +1,6 @@
-import { all, delay, fork, put, retry, takeEvery } from 'redux-saga/effects';
+import { all, delay, fork, put, takeEvery } from 'redux-saga/effects';
 import { SagaIterator } from 'redux-saga';
-import { call, select } from 'typed-redux-saga';
+import { call, retry, select } from 'typed-redux-saga';
 
 import * as actions from './actions';
 import { showModal, showSuccess, showNotification } from '../view/actions';
@@ -22,7 +22,11 @@ function* getProfileSaga(): SagaIterator {
     yield put(showModal('loadingProfile'));
     // Try to fetch the API 3 times, with a 10
     // seconds interval between calls.
-    const { getUserProfile, error } = yield retry(3, 10000, api.getUserProfile);
+    const { getUserProfile, error } = yield* retry(
+      3,
+      10000,
+      api.getUserProfile
+    );
 
     if (getUserProfile?.success) {
       // If response is ok, set the user profile in the store.
