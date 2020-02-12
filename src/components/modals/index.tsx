@@ -2,7 +2,9 @@ import React from 'react';
 
 import { useTypedSelector } from '../lib';
 import { AddContact } from './addContact';
+import { AddMembers } from './addMembers';
 import { CreateGroup } from './createGroup';
+import { GroupMembers } from './groupMembers';
 import { Invitations } from './invitations';
 import { LoadingProfile } from './loadingProfile';
 import { Logout } from './logout';
@@ -14,8 +16,12 @@ const ModalManager: React.FC = () => {
   switch (visibleModal) {
     case 'addContact':
       return <AddContact />;
+    case 'addMembers':
+      return <AddMembers />;
     case 'createGroup':
       return <CreateGroup />;
+    case 'groupMembers':
+      return <GroupMembers />;
     case 'invitations':
       return <Invitations />;
     case 'loadingProfile':

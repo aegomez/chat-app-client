@@ -13,4 +13,6 @@ export type ModalName =
   | 'addContact'
   | 'createGroup'
   | 'invitations'
+  | 'groupMembers'
+  | 'addMembers'
   | 'none'; // Hide all modals

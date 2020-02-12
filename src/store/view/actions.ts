@@ -9,9 +9,6 @@ export const setRedirectToLogin = createAction('view/setRegisterRedirect')<
   boolean
 >();
 
-// Filter sidebar contacts/groups
-export const setFilter = createAction('view/sidebarFilter')<string>();
-
 // Show/hide a modal view, only one can be
 // visible at a time, 'none' hides all.
 export const showModal = createAction('view/showModal')<ModalName>();
