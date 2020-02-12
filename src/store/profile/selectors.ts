@@ -1,24 +1,17 @@
 import { createSelector } from 'reselect';
 
 import { RootState } from '@store/types';
-import { GroupSchema } from '@api/user';
+import { getGroupChatProps } from '@store/chat/selectors';
+
+/* Selectors */
+
+export const getUserId = (state: RootState): string => state.profile._id;
 
 /* Memoized selectors */
 
-const getFilter = createSelector(
-  (state: RootState) => state.view.filter,
-  filter => filter.toLowerCase()
-);
-
 export const getAcceptedContacts = createSelector(
   (state: RootState) => state.profile.contacts,
-  getFilter,
-  (contacts, filter) =>
-    contacts.filter(
-      contact =>
-        contact.status === 'accepted' &&
-        contact.ref.publicName.toLowerCase().includes(filter)
-    )
+  contacts => contacts.filter(contact => contact.status === 'accepted')
 );
 
 export const getPendingContacts = createSelector(
@@ -31,13 +24,19 @@ export const getNumberOfPendingContacts = createSelector(
   contacts => contacts.length
 );
 
+export const getNotInGroupContacts = createSelector(
+  (state: RootState) => state.profile.contacts,
+  getGroupChatProps,
+  (contacts, groupChat) => {
+    const groupMembers = groupChat?.ref.members.map(member => member._id) || [];
+    return contacts.filter(
+      contact =>
+        contact.status === 'accepted' && !groupMembers.includes(contact.ref._id)
+    );
+  }
+);
+
 export const getGroupRefs = createSelector(
   (state: RootState) => state.profile.groups,
-  getFilter,
-  (groups, filter) =>
-    groups.reduce(
-      (result, { ref }) =>
-        ref.name.toLowerCase().includes(filter) ? result.concat(ref) : result,
-      [] as GroupSchema[]
-    )
+  groups => groups.map(group => group.ref)
 );

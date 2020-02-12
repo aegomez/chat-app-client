@@ -7,7 +7,7 @@ import {
   updateContact,
   createGroup,
   addGroupMember,
-  deleteGroupMember,
+  leaveGroup,
   updateAvatar,
   updatePublicName,
   updateLanguage
@@ -100,32 +100,18 @@ export const profileReducer = createReducer(initialState)
     return { ...state, groups: newGroups };
   })
 
-  // Find a group and one of its members by id.
-  // If both exist, remove the member from group.
-  .handleAction(deleteGroupMember.success, (state, action) => {
-    const { groupId, userId } = action.payload;
-    const newGroups = state.groups.slice();
-    const groupIndex = newGroups.findIndex(obj => obj.ref._id === groupId);
-    if (!groupIndex) {
+  // Find a group and remove it from profile.
+  // User is removed from group in the server.
+  .handleAction(leaveGroup.success, (state, action) => {
+    const groupId = action.payload;
+    const index = state.groups.findIndex(obj => obj.ref._id === groupId);
+    if (index < 0) {
       return state;
     }
-    const foundGroup = state.groups[groupIndex];
-    const members = foundGroup.ref.members;
-    const userIndex = members.findIndex(obj => obj._id === userId);
-    if (userIndex < 0) {
-      return state;
-    }
-    newGroups[groupIndex] = {
-      joined: foundGroup.joined,
-      ref: {
-        ...foundGroup.ref,
-        members: [
-          ...members.slice(0, userIndex),
-          ...members.slice(userIndex + 1, members.length)
-        ]
-      }
-    };
-    members.splice(userIndex, 1);
+    const newGroups = [
+      ...state.groups.slice(0, index),
+      ...state.groups.slice(index + 1, state.groups.length)
+    ];
     return { ...state, groups: newGroups };
   })
 

@@ -45,9 +45,9 @@ export const addGroupMember = {
     PartialUserSchema & { groupId: string }
   >()
 };
-export const deleteGroupMember = {
-  request: createAction('groups/deleteMember')<UpdateGroupArgs>(),
-  success: createAction('groups/deleteMember/success')<UpdateGroupArgs>()
+export const leaveGroup = {
+  request: createAction('groups/leave')<string>(),
+  success: createAction('groups/leave/success')<string>()
 };
 
 export const updateAvatar = {

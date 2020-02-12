@@ -1,11 +1,12 @@
 import { all, delay, fork, put, retry, takeEvery } from 'redux-saga/effects';
 import { SagaIterator } from 'redux-saga';
-import { call } from 'typed-redux-saga';
+import { call, select } from 'typed-redux-saga';
 
 import * as actions from './actions';
 import { showModal, showSuccess, showNotification } from '../view/actions';
 import { logoutUser } from '../auth/actions';
 import { NO_SUCCESS, handleErrorSaga } from '../errorHandler';
+import { getUserId } from './selectors';
 
 import * as api from '@api/user';
 import { clearLoggedInFlag } from '@api/browser/storage';
@@ -147,17 +148,21 @@ function* addGroupMemberSaga(
   }
 }
 
-function* deleteGroupMemberSaga(
-  action: ReturnType<typeof actions.deleteGroupMember.request>
+function* leaveGroupSaga(
+  action: ReturnType<typeof actions.leaveGroup.request>
 ): SagaIterator {
   try {
-    const { deleteGroupMember, error } = yield* call(
-      api.deleteGroupMember,
-      action.payload
-    );
+    const userId = yield* select(getUserId);
+    const { deleteGroupMember, error } = yield* call(api.deleteGroupMember, {
+      groupId: action.payload,
+      userId
+    });
 
     if (deleteGroupMember?.success) {
-      yield put(actions.deleteGroupMember.success(action.payload));
+      yield all([
+        put(actions.leaveGroup.success(action.payload)),
+        put(showModal('none'))
+      ]);
     } else {
       throw Error(error || NO_SUCCESS);
     }
@@ -236,7 +241,7 @@ export function* watchProfileSagas(): SagaIterator<void> {
     takeEvery(actions.updateContact.request, updateContactSaga),
     takeEvery(actions.createGroup.request, createGroupSaga),
     takeEvery(actions.addGroupMember.request, addGroupMemberSaga),
-    takeEvery(actions.deleteGroupMember.request, deleteGroupMemberSaga),
+    takeEvery(actions.leaveGroup.request, leaveGroupSaga),
     takeEvery(actions.updateAvatar.request, updateAvatarSaga),
     takeEvery(actions.updateLanguage.request, updateLanguageSaga),
     takeEvery(actions.updatePublicName.request, updatePublicNameSaga)

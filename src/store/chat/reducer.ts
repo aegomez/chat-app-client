@@ -2,6 +2,7 @@ import { createReducer } from 'typesafe-actions';
 
 import { setActiveChat } from './actions';
 import { logoutUser } from '../auth/actions';
+import { leaveGroup } from '../profile/actions';
 
 const initialState = {
   // id of the contact/group
@@ -21,4 +22,6 @@ export const chatReducer = createReducer(initialState)
       isGroupChat
     };
   })
-  .handleAction(logoutUser.success, () => initialState);
+  // Reset the chat view after logout or
+  // leaving the active group
+  .handleAction([logoutUser.success, leaveGroup.success], () => initialState);
