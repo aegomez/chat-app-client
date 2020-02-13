@@ -47,9 +47,8 @@ const config = {
         target:'http://localhost:3000/gql',
         pathRewrite: {'^/api/user': ''}
       },
-      '/api/conversations': {
-        target: 'http://localhost:4000',
-        pathRewrite: {'^/api/conversations': ''}
+      '/socket.io': {
+        target: 'http://localhost:4000'
       }
     },
     publicPath: '/public'
