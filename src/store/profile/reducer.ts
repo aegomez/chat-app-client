@@ -1,4 +1,5 @@
 import { createReducer } from 'typesafe-actions';
+import clone from 'rfdc';
 
 import {
   getProfile,
@@ -84,20 +85,13 @@ export const profileReducer = createReducer(initialState)
   // Find a group by id and, if it exists, add a new member.
   .handleAction(addGroupMember.success, (state, action) => {
     const { groupId, ...newMember } = action.payload;
-    const newGroups = state.groups.slice();
-    const index = newGroups.findIndex(obj => obj.ref._id === groupId);
+    const index = state.groups.findIndex(obj => obj.ref._id === groupId);
     if (index < 0) {
       return state;
     }
-    const found = state.groups[index];
-    newGroups[index] = {
-      joined: found.joined,
-      ref: {
-        ...found.ref,
-        members: found.ref.members.slice().concat(newMember)
-      }
-    };
-    return { ...state, groups: newGroups };
+    const groups = clone()(state.groups);
+    groups[index].ref.members.concat(newMember);
+    return { ...state, groups };
   })
 
   // Find a group and remove it from profile.
@@ -108,11 +102,8 @@ export const profileReducer = createReducer(initialState)
     if (index < 0) {
       return state;
     }
-    const newGroups = [
-      ...state.groups.slice(0, index),
-      ...state.groups.slice(index + 1, state.groups.length)
-    ];
-    return { ...state, groups: newGroups };
+    const groups = clone()(state.groups).splice(index, 1);
+    return { ...state, groups };
   })
 
   // User settings actions
