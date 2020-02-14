@@ -26,3 +26,12 @@ export const getGroupChatProps = createSelector(
       : null;
   }
 );
+
+/**
+ * Try to get active conversation object from cache.
+ */
+export const getCachedConversation = createSelector(
+  (state: RootState) => state.chat.cache,
+  state => state.chat.activeConversation,
+  (cache, activeId) => cache.find(conv => conv._id === activeId)
+);

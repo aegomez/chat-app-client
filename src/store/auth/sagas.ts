@@ -16,6 +16,7 @@ import { handleErrorSaga, NOT_AUTHORIZED } from '../errorHandler';
 import * as authApi from '@api/auth';
 import { updateUserConnected } from '@api/user';
 import { setLoggedInFlag, clearLoggedInFlag } from '@api/browser/storage';
+import { socketDisconnect } from '@store/chat/actions';
 
 function* registerUserSaga(
   action: ReturnType<typeof registerUser.request>
@@ -56,7 +57,11 @@ function* logoutUserSaga(): SagaIterator<void> {
     const response = yield* call(updateUserConnected, false);
     const data = response.updateUserConnected;
     if (data) {
-      yield all([put(logoutUser.success()), fork(clearLoggedInFlag)]);
+      yield all([
+        put(logoutUser.success()),
+        put(socketDisconnect()),
+        fork(clearLoggedInFlag)
+      ]);
     } else {
       yield put(logoutUser.failure());
     }

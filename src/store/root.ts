@@ -9,6 +9,7 @@ import { viewReducer } from './view/reducer';
 
 import { watchAuthSagas } from './auth/sagas';
 import { watchProfileSagas } from './profile/sagas';
+import { watchChatSagas } from './chat/sagas';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -18,5 +19,9 @@ export const rootReducer = combineReducers({
 });
 
 export function* rootSaga(): SagaIterator<void> {
-  yield all([fork(watchAuthSagas), fork(watchProfileSagas)]);
+  yield all([
+    fork(watchAuthSagas),
+    fork(watchChatSagas),
+    fork(watchProfileSagas)
+  ]);
 }
