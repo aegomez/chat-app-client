@@ -21,12 +21,12 @@ const Sidebar: React.FC = () => {
   }
 
   return (
-    <aside className="column is-one-quarter has-background-dark is-flex-column">
+    <aside className="column is-one-quarter-desktop is-one-third-tablet is-two-fifths-mobile has-background-dark is-flex-column">
       <Dropdown />
       <SearchBox handleChange={handleSearchbox} />
-      <div className="menu is-dark is-scroll">
+      <div className="menu is-dark is-scroll is-size-7-mobile">
         <Controls />
-        <p className="menu-label  has-text-weight-bold">{m.contactsLabel}</p>
+        <p className="menu-label has-text-weight-bold">{m.contactsLabel}</p>
         <ul className="menu-list">
           <li>
             <ContactList filter={searchFilter} />

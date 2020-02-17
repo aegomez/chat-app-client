@@ -13,6 +13,7 @@ interface ContactProps {
   connected: boolean;
   conversationId: string;
   isActive: boolean;
+  unread?: number;
   eventHandler: (chatId: string, conversationId: string) => void;
 }
 
@@ -23,6 +24,7 @@ const Contact: React.FC<ContactProps> = ({
   connected,
   conversationId,
   isActive,
+  unread,
   eventHandler
 }) => {
   function handleClick(event: React.MouseEvent): void {
@@ -41,7 +43,14 @@ const Contact: React.FC<ContactProps> = ({
             <img src={avatar} title="User avatar" />
           </span>
         </figure>
-        <span className="media-content">{name}</span>
+        <span className="media-content">
+          {name}
+          {unread ? (
+            <small className="has-text-weight-bold">
+              {` [${unread > 99 ? '99+' : unread}]`}
+            </small>
+          ) : null}
+        </span>
         {connected ? (
           <span className="media-right icon is-small has-text-success">
             <FontAwesomeIcon icon="circle" />
@@ -58,6 +67,7 @@ interface ListProps {
 
 const ContactList: React.FC<ListProps> = ({ filter }) => {
   const contacts = useSelector(getAcceptedContacts);
+  const cache = useTypedSelector(state => state.chat.cache);
   const activeChat = useTypedSelector(state => state.chat.activeChat);
   const dispatch = useDispatch();
 
@@ -73,6 +83,12 @@ const ContactList: React.FC<ListProps> = ({ filter }) => {
         const isMatch = ref.publicName
           .toLowerCase()
           .includes(filter.toLowerCase());
+        // Look for unread messages
+        const unreadMessages = cache.find(conv => conv._id === conversation)
+          ?.unread;
+        console.log(cache);
+        console.log(unreadMessages);
+
         return isMatch ? (
           <Contact
             avatar={ref.avatar}
@@ -80,6 +96,7 @@ const ContactList: React.FC<ListProps> = ({ filter }) => {
             connected={ref.connected}
             name={ref.publicName}
             conversationId={conversation}
+            unread={unreadMessages}
             eventHandler={setActive}
             isActive={ref._id === activeChat}
             key={key}
