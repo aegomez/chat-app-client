@@ -1,6 +1,6 @@
 import { createAction } from 'typesafe-actions';
 
-import { NotificationMessage, ModalName } from './types';
+import { NotificationMessage, ModalName, NewConnection } from './types';
 
 // Standard action creators
 
@@ -20,3 +20,6 @@ export const showSuccess = createAction('view/showSuccess')<boolean>();
 export const showNotification = createAction('view/notification')<
   NotificationMessage
 >();
+
+// Show/hide toast notification
+export const showToast = createAction('view/toast')<NewConnection | null>();

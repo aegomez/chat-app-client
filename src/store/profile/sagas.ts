@@ -3,7 +3,13 @@ import { SagaIterator } from 'redux-saga';
 import { call, retry, select } from 'typed-redux-saga';
 
 import * as actions from './actions';
-import { showModal, showSuccess, showNotification } from '../view/actions';
+import {
+  showModal,
+  showSuccess,
+  showNotification,
+  showToast
+} from '../view/actions';
+import { userConnected } from '../chat/actions';
 import { logoutUser } from '../auth/actions';
 import { NO_SUCCESS, handleErrorSaga } from '../errorHandler';
 import { getUserId } from './selectors';
@@ -237,6 +243,24 @@ function* updatePublicNameSaga(
   }
 }
 
+// After taking this event from the socket
+// event channel: update the profile state
+// and show a toast notification.
+function* updateConnectedSaga(
+  action: ReturnType<typeof userConnected>
+): SagaIterator {
+  try {
+    // Send action to profile reducer
+    yield put(actions.updateConnected(action.payload));
+    // Show and hide notification
+    yield put(showToast(action.payload));
+    yield delay(3000);
+    yield put(showToast(null));
+  } catch (err) {
+    yield* call(handleErrorSaga, err);
+  }
+}
+
 export function* watchProfileSagas(): SagaIterator<void> {
   yield all([
     takeEvery(actions.getProfile.request, getProfileSaga),
@@ -248,6 +272,7 @@ export function* watchProfileSagas(): SagaIterator<void> {
     takeEvery(actions.leaveGroup.request, leaveGroupSaga),
     takeEvery(actions.updateAvatar.request, updateAvatarSaga),
     takeEvery(actions.updateLanguage.request, updateLanguageSaga),
-    takeEvery(actions.updatePublicName.request, updatePublicNameSaga)
+    takeEvery(actions.updatePublicName.request, updatePublicNameSaga),
+    takeEvery(userConnected, updateConnectedSaga)
   ]);
 }

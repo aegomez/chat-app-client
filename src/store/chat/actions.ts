@@ -7,7 +7,7 @@ import {
   NewMessageArgs,
   NewMessageRes,
   UpdateMessageArgs,
-  UserProps
+  NewConnection
 } from '@api/chat';
 
 // Standard action creators
@@ -51,7 +51,9 @@ export const messageUpdated = createAction('chat/messageUpdated')<
   UpdateMessageArgs
 >();
 
-export const userConnected = createAction('chat/userConnected')<UserProps>();
+export const userConnected = createAction('chat/userConnected')<
+  NewConnection
+>();
 
 // All actions that can be emitted
 // by the EventChannel.

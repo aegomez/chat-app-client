@@ -47,7 +47,7 @@ export interface NewMessageRes {
   itsOwn: boolean;
 }
 
-export interface UserProps {
+export interface NewConnection {
   userId: string;
   userName: string;
   connected: boolean;

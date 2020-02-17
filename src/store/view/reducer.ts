@@ -4,16 +4,18 @@ import {
   setRedirectToLogin,
   showModal,
   showSuccess,
-  showNotification
+  showNotification,
+  showToast
 } from './actions';
 import { logoutUser } from '../auth/actions';
-import { NotificationMessage, ModalName } from './types';
+import { NotificationMessage, ModalName, NewConnection } from './types';
 
 const initialState = {
   redirectToLogin: false,
   modal: 'none' as ModalName,
   updateSuccess: false,
-  notification: 'none' as NotificationMessage
+  notification: 'none' as NotificationMessage,
+  toast: null as NewConnection | null
 };
 
 export const viewReducer = createReducer(initialState)
@@ -37,6 +39,11 @@ export const viewReducer = createReducer(initialState)
   .handleAction(showNotification, (state, action) => ({
     ...state,
     notification: action.payload
+  }))
+  // Show/hide toast notification
+  .handleAction(showToast, (state, action) => ({
+    ...state,
+    toast: action.payload ? { ...action.payload } : null
   }))
   // On a logout action, reset the state.
   .handleAction(logoutUser.success, () => initialState);

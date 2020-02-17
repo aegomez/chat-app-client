@@ -9,6 +9,7 @@ import {
   UserLanguage,
   PartialUserSchema
 } from '@api/user/types';
+import { NewConnection } from '@api/chat';
 
 // Async action creators
 
@@ -62,3 +63,8 @@ export const updatePublicName = {
   request: createAction('settings/publicName')<string>(),
   success: createAction('settings/publicName/success')<string>()
 };
+
+// Update an user connected (local) status
+export const updateConnected = createAction('contacts/connected')<
+  NewConnection
+>();

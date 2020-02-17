@@ -10,6 +10,7 @@ import {
   addGroupMember,
   leaveGroup,
   updateAvatar,
+  updateConnected,
   updatePublicName,
   updateLanguage
 } from './actions';
@@ -125,6 +126,31 @@ export const profileReducer = createReducer(initialState)
     ...state,
     publicName: action.payload
   }))
+
+  // Socket actions
+
+  // Update an user connected status
+  // after a corresponding socket event.
+  .handleAction(updateConnected, (state, action) => {
+    const { connected, userId } = action.payload;
+
+    // Find the user
+    const index = state.contacts.findIndex(obj => obj.ref._id === userId);
+    if (index < 0) {
+      return state;
+    }
+
+    // Check if `connected` actually changed
+    if (state.contacts[index].ref.connected === connected) {
+      return state;
+    }
+
+    // Update the state
+    const newState = clone()(state);
+    state.contacts[index].ref.connected = connected;
+
+    return newState;
+  })
 
   // After a getUserProfile failed request or
   // a logoutUser success, reset the state.

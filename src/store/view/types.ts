@@ -1,3 +1,5 @@
+export { NewConnection } from '@api/chat';
+
 export type NotificationMessage =
   | 'no-success'
   | 'no-auth'

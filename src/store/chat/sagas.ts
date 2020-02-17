@@ -26,7 +26,7 @@ import {
   ConversationArgs,
   NewMessageRes,
   UpdateMessageArgs,
-  UserProps
+  NewConnection
 } from '@api/chat';
 
 // Create an event channel from a socket
@@ -65,7 +65,8 @@ function createSocketChannel(
     });
 
     // User events
-    socket.on('userConnected', (payload: UserProps) => {
+    socket.on('userConnected', (payload: NewConnection) => {
+      console.log('userConnected', payload);
       emit(userConnected(payload));
     });
 
