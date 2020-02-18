@@ -36,7 +36,7 @@ const Message: React.FC<MessageProps> = ({ content, date, status, own }) => {
           {status === 'deleted' ? (
             <p className="has-text-light is-italic">{m.deleted}</p>
           ) : (
-            <p>{content}</p>
+            <p className="is-wrap">{content}</p>
           )}
         </div>
       </div>
@@ -76,7 +76,7 @@ const GroupMessage: React.FC<GroupMessageProps> = ({
         {status === 'deleted' ? (
           <p className="has-text-light is-italic">{m.deleted}</p>
         ) : (
-          <p>{content}</p>
+          <p className="is-wrap">{content}</p>
         )}
       </div>
     </div>

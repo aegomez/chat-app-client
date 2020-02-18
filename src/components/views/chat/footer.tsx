@@ -16,7 +16,10 @@ const ChatFooter: React.FC<FooterProps> = ({ sendHandler }) => {
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>): void {
     const target = event.target;
     // Control the input value with state
-    setMessage(target.value);
+    // Validate message's length
+    if (target.value.trim().length < 1001) {
+      setMessage(target.value);
+    }
   }
   function handleClick(): void {
     sendHandler(message.trim());

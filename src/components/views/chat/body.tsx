@@ -43,8 +43,7 @@ const ChatBody: React.FC<BodyProps> = ({ conversation, ownId }) => {
   const unseen = messages.some(
     mssg => mssg.author !== ownId && mssg.status !== 'seen'
   );
-  console.log('unseen is:  ', unseen);
-  console.log(messages);
+
   if (unseen) {
     dispatch(
       updateConversation({
