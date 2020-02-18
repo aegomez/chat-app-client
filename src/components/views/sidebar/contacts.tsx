@@ -86,8 +86,6 @@ const ContactList: React.FC<ListProps> = ({ filter }) => {
         // Look for unread messages
         const unreadMessages = cache.find(conv => conv._id === conversation)
           ?.unread;
-        console.log(cache);
-        console.log(unreadMessages);
 
         return isMatch ? (
           <Contact

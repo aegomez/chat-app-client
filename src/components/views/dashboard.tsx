@@ -10,7 +10,6 @@ import { socketConnect } from '@store/chat/actions';
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch();
   useEffect(function() {
-    console.log('getProfile was called!');
     dispatch(getProfile.request());
     dispatch(socketConnect());
   });

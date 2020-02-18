@@ -6,7 +6,7 @@ export interface ActiveChatArgs {
 
 // DB models
 
-type MessageStatus = 'sent' | 'received' | 'seen' | 'deleted';
+export type MessageStatus = 'sent' | 'received' | 'seen' | 'deleted';
 
 export interface Message {
   _id: string;

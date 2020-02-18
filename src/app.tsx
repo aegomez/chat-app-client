@@ -9,6 +9,7 @@ import {
   faCircleNotch,
   faEdit,
   faEnvelope,
+  faEnvelopeOpen,
   faExclamationTriangle,
   faGlobe,
   faLock,
@@ -17,6 +18,7 @@ import {
   faPlus,
   faSearch,
   faSignOutAlt,
+  faTrash,
   faUser,
   faUsers,
   faWrench
@@ -33,6 +35,7 @@ library.add(
   faCircleNotch,
   faEdit,
   faEnvelope,
+  faEnvelopeOpen,
   faExclamationTriangle,
   faGlobe,
   faLock,
@@ -41,6 +44,7 @@ library.add(
   faPlus,
   faSearch,
   faSignOutAlt,
+  faTrash,
   faUser,
   faUsers,
   faWrench

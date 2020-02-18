@@ -16,10 +16,10 @@ const ChatFooter: React.FC<FooterProps> = ({ sendHandler }) => {
   function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>): void {
     const target = event.target;
     // Control the input value with state
-    setMessage(target.value.trim());
+    setMessage(target.value);
   }
   function handleClick(): void {
-    sendHandler(message);
+    sendHandler(message.trim());
     setMessage('');
   }
   function handleKeyDown(

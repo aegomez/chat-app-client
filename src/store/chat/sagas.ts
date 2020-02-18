@@ -50,7 +50,7 @@ function createSocketChannel(
       emit(messageCreated(payload));
       // If message its not own:
       // dispatch a `received` notification
-      if (!payload.itsOwn) {
+      if (!payload.itsOwn && payload.message.status === 'sent') {
         emit(
           updateMessage({
             conversationId: payload.conversationId,
@@ -66,8 +66,11 @@ function createSocketChannel(
 
     // User events
     socket.on('userConnected', (payload: NewConnection) => {
-      console.log('userConnected', payload);
       emit(userConnected(payload));
+    });
+
+    socket.on('error', () => {
+      console.error('Cant communicate with server. Retrying...');
     });
 
     // Must return an unsubscribe function
@@ -100,7 +103,7 @@ function* writeSocketSaga(socket: SocketIOClient.Socket): SagaIterator<void> {
       // as the event and payload as args
       yield* call([socket, socket.emit], action.type, action.payload);
     } catch (err) {
-      console.error('socket.emit error: ', err);
+      console.error('socket.emit error: ', err.message);
     }
   });
 }
