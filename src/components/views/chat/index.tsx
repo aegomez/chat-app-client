@@ -27,6 +27,7 @@ const Chat: React.FC = () => {
   const activeConversation = useTypedSelector(
     state => state.chat.activeConversation
   );
+  const activeChat = useTypedSelector(state => state.chat.activeChat);
   const conversation = useSelector(getCachedConversation);
   const dispatch = useDispatch();
 
@@ -53,7 +54,8 @@ const Chat: React.FC = () => {
     dispatch(
       createMessage({
         content: message,
-        conversationId: activeConversation
+        conversationId: activeConversation,
+        targetId: activeChat
       })
     );
   }
@@ -66,6 +68,7 @@ const Chat: React.FC = () => {
     dispatch(
       updateMessage({
         conversationId: activeConversation,
+        targetId: activeChat,
         messageId: toBeDeletedMessage,
         newStatus: 'deleted'
       })

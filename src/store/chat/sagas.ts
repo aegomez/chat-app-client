@@ -55,6 +55,7 @@ function createSocketChannel(
           updateMessage({
             conversationId: payload.conversationId,
             messageId: payload.message._id,
+            targetId: payload.message.author,
             newStatus: 'received'
           })
         );

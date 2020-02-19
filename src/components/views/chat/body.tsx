@@ -35,7 +35,7 @@ const ChatBody: React.FC<BodyProps> = ({
   }
 
   // Setup variables
-  const { avatar, connected, publicName, userName } = chatProps.ref;
+  const { _id, avatar, connected, publicName, userName } = chatProps.ref;
   const headerProps = {
     avatar,
     title: publicName,
@@ -53,6 +53,7 @@ const ChatBody: React.FC<BodyProps> = ({
     dispatch(
       updateConversation({
         conversationId: conversation._id,
+        targetId: _id,
         newStatus: 'seen'
       })
     );

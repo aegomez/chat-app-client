@@ -30,10 +30,12 @@ export interface Conversation {
 // Client-side requests
 export interface ConversationArgs {
   conversationId: string;
+  targetId: string;
   newStatus: MessageStatus;
 }
 export interface NewMessageArgs {
   conversationId: string;
+  targetId: string;
   content: string;
 }
 export interface UpdateMessageArgs extends ConversationArgs {
