@@ -12,7 +12,7 @@ const Welcome: React.FC = () => {
   const avatar = useTypedSelector(state => state.profile.avatar);
 
   return (
-    <div className="column has-background-white-bis is-flex-column">
+    <div className="column has-background-white-bis">
       <section className="section">
         <div className="container content has-text-centered">
           <h2 className="title">{m.title + name}</h2>

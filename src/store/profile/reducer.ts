@@ -147,7 +147,7 @@ export const profileReducer = createReducer(initialState)
 
     // Update the state
     const newState = clone()(state);
-    state.contacts[index].ref.connected = connected;
+    newState.contacts[index].ref.connected = connected;
 
     return newState;
   })

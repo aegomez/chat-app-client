@@ -38,7 +38,12 @@ const Chat: React.FC = () => {
   // If there is no active conversation:
   // display the welcome screen.
   if (!activeConversation) {
-    return <Welcome />;
+    return (
+      <>
+        <Welcome />
+        <Toast />
+      </>
+    );
   }
 
   // If conversation is not in cache:
