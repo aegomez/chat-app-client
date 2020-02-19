@@ -22,7 +22,6 @@ function* failRequestSaga(message: NotificationMessage): SagaIterator {
 
 // General error handler
 export function* handleErrorSaga(error: Error): SagaIterator {
-  console.log('handleErrorSaga was called');
   if (error.message === NO_SUCCESS) {
     // Request was successful, but operation failed
     // due to a problem with the data or the database.

@@ -30,7 +30,7 @@
   display: flex;
 }
 .notification.is-marginless {
-  z-index: 10;
+  z-index: 100;
 }
 .notification.toast {
   max-width: 300px;
@@ -38,7 +38,7 @@
   right: 5%;
   top: 5%;
   visibility: visible;
-  z-index: 10;
+  z-index: 100;
 }
 .is-flex-column {
   display: flex;

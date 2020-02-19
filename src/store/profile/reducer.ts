@@ -91,7 +91,7 @@ export const profileReducer = createReducer(initialState)
       return state;
     }
     const groups = clone()(state.groups);
-    groups[index].ref.members.concat(newMember);
+    groups[index].ref.members.push(newMember);
     return { ...state, groups };
   })
 
@@ -103,7 +103,8 @@ export const profileReducer = createReducer(initialState)
     if (index < 0) {
       return state;
     }
-    const groups = clone()(state.groups).splice(index, 1);
+    const groups = clone()(state.groups);
+    groups.splice(index, 1);
     return { ...state, groups };
   })
 
