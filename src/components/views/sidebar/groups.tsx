@@ -11,6 +11,7 @@ interface GroupProps {
   name: string;
   chatId: string;
   conversationId: string;
+  unread?: number;
 }
 
 const Group: React.FC<GroupProps> = ({
@@ -18,6 +19,7 @@ const Group: React.FC<GroupProps> = ({
   chatId,
   conversationId,
   isActive,
+  unread,
   eventHandler
 }) => {
   function handleClick(event: React.MouseEvent): void {
@@ -29,6 +31,11 @@ const Group: React.FC<GroupProps> = ({
     <li>
       <a className={isActive ? 'is-active' : ''} onClick={handleClick}>
         {name}
+        {unread ? (
+          <small className="has-text-weight-bold">
+            {` [${unread > 99 ? '99+' : unread}]`}
+          </small>
+        ) : null}
       </a>
     </li>
   );
@@ -40,6 +47,7 @@ interface ListProps {
 
 const GroupList: React.FC<ListProps> = ({ filter }) => {
   const groups = useTypedSelector(getGroupRefs);
+  const unread = useTypedSelector(state => state.chat.unread);
   const activeChat = useTypedSelector(state => state.chat.activeChat);
   const dispatch = useDispatch();
 
@@ -52,11 +60,15 @@ const GroupList: React.FC<ListProps> = ({ filter }) => {
       {groups.map((group, key) => {
         // Filter by name
         const isMatch = group.name.toLowerCase().includes(filter.toLowerCase());
+        // Look for unread messages
+        const unreadMessages = unread[group.conversation] || 0;
+
         return isMatch ? (
           <Group
             name={group.name}
             chatId={group._id}
             conversationId={group.conversation}
+            unread={unreadMessages}
             isActive={group._id === activeChat}
             eventHandler={setActive}
             key={key}
