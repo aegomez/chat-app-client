@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -28,6 +28,12 @@ const ChatBody: React.FC<BodyProps> = ({
   // Store state
   const chatProps = useSelector(getSingleChatProps);
   const dispatch = useDispatch();
+
+  // Scroll to the bottom of message list
+  const bottomOfMessages = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    bottomOfMessages.current?.scrollIntoView({ behavior: 'smooth' });
+  });
 
   // Active chat is undefined or can't be found
   if (!chatProps) {
@@ -82,6 +88,7 @@ const ChatBody: React.FC<BodyProps> = ({
           };
           return <Message {...props} key={key} />;
         })}
+        <div ref={bottomOfMessages}></div>
       </section>
     </>
   );
@@ -95,6 +102,12 @@ const GroupChatBody: React.FC<BodyProps> = ({
   // Store state
   const chatProps = useSelector(getGroupChatProps);
   const dispatch = useDispatch();
+
+  // Scroll to the bottom of message list
+  const bottomOfMessages = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    bottomOfMessages.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [conversation]);
 
   // Active chat is undefined or can't be found
   if (!chatProps) {
@@ -147,6 +160,7 @@ const GroupChatBody: React.FC<BodyProps> = ({
           };
           return <Message {...props} key={key} />;
         })}
+        <div ref={bottomOfMessages}></div>
       </section>
     </>
   );
