@@ -19,17 +19,23 @@ const initialState = {
   activeConversation: '',
   isGroupChat: false,
   // conversations cache
-  cache: [] as Conversation[]
+  cache: [] as Conversation[],
+  // Track the number of unread messages
+  unread: {} as { [key: string]: number }
 };
 
 export const chatReducer = createReducer(initialState)
   .handleAction(setActiveChat, (state, action) => {
     const { chatId, conversationId, isGroupChat } = action.payload;
     return {
-      ...state,
+      cache: [...state.cache],
       activeChat: chatId,
       activeConversation: conversationId,
-      isGroupChat
+      isGroupChat,
+      unread: {
+        ...state.unread,
+        [conversationId]: 0
+      }
     };
   })
 
@@ -47,21 +53,22 @@ export const chatReducer = createReducer(initialState)
 
     // Find conversation
     const index = state.cache.findIndex(obj => obj._id === conversationId);
-    if (index < 0) {
-      return state;
-    }
 
-    // Add message to conversation
-    const cache = clone()(state.cache);
-    cache[index].messages.push(message);
+    const newState = clone()(state);
+
+    // Add message to conversation if its cached
+    if (index >= 0) {
+      newState.cache[index].messages.push(message);
+    }
 
     // If the message is not own and chat
     // is not active, mark as unread.
     if (!itsOwn && state.activeConversation !== conversationId) {
-      cache[index].unread = (cache[index].unread || 0) + 1;
+      newState.unread[conversationId] =
+        (newState.unread[conversationId] || 0) + 1;
     }
 
-    return { ...state, cache };
+    return newState;
   })
 
   // A message was successfully updated:

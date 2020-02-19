@@ -67,7 +67,7 @@ interface ListProps {
 
 const ContactList: React.FC<ListProps> = ({ filter }) => {
   const contacts = useSelector(getAcceptedContacts);
-  const cache = useTypedSelector(state => state.chat.cache);
+  const unread = useTypedSelector(state => state.chat.unread);
   const activeChat = useTypedSelector(state => state.chat.activeChat);
   const dispatch = useDispatch();
 
@@ -84,8 +84,7 @@ const ContactList: React.FC<ListProps> = ({ filter }) => {
           .toLowerCase()
           .includes(filter.toLowerCase());
         // Look for unread messages
-        const unreadMessages = cache.find(conv => conv._id === conversation)
-          ?.unread;
+        const unreadMessages = unread[conversation] || 0;
 
         return isMatch ? (
           <Contact

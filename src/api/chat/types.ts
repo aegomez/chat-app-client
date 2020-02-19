@@ -20,9 +20,6 @@ export interface Conversation {
   _id: string;
   lastUpdate: Date;
   messages: Message[];
-  // Client-only property, tracks
-  // the number of unread messages.
-  unread?: number;
 }
 
 // Socket events properties
