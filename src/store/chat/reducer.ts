@@ -111,7 +111,13 @@ export const chatReducer = createReducer(initialState)
     // Update messages in conversation
     const cache = clone()(state.cache);
     for (const message of cache[index].messages) {
-      message.status = newStatus;
+      // Deleted status cannot be undone
+      if (message.status !== 'deleted') {
+        message.status = newStatus;
+        if (newStatus === 'deleted') {
+          message.content = '';
+        }
+      }
     }
 
     return { ...state, cache };

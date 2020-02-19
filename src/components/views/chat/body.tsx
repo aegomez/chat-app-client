@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ChatHeader } from './header';
-import { Message, GroupMessage } from './message';
+import { Message } from './message';
 
 import { Conversation } from '@api/chat';
 import { getSingleChatProps, getGroupChatProps } from '@store/chat/selectors';
-import { showModal } from '@store/view/actions';
 import { updateConversation } from '@store/chat/actions';
+import { showModal } from '@store/view/actions';
 
 const m = {
   members: 'Members...'
@@ -16,10 +16,15 @@ const m = {
 
 interface BodyProps {
   conversation: Conversation;
+  deleteHandler: (id: string) => void;
   ownId: string;
 }
 
-const ChatBody: React.FC<BodyProps> = ({ conversation, ownId }) => {
+const ChatBody: React.FC<BodyProps> = ({
+  conversation,
+  deleteHandler,
+  ownId
+}) => {
   // Store state
   const chatProps = useSelector(getSingleChatProps);
   const dispatch = useDispatch();
@@ -68,9 +73,13 @@ const ChatBody: React.FC<BodyProps> = ({ conversation, ownId }) => {
       <section className="section chat-body is-scroll">
         {messages.map((message, key) => {
           const { author, ...rest } = message;
+          const isOwn = ownId === author;
           const props = {
             ...rest,
-            own: ownId === author
+            avatar,
+            isOwn,
+            author: isOwn ? '' : publicName,
+            deleteHandler
           };
           return <Message {...props} key={key} />;
         })}
@@ -79,7 +88,11 @@ const ChatBody: React.FC<BodyProps> = ({ conversation, ownId }) => {
   );
 };
 
-const GroupChatBody: React.FC<BodyProps> = ({ conversation, ownId }) => {
+const GroupChatBody: React.FC<BodyProps> = ({
+  conversation,
+  deleteHandler,
+  ownId
+}) => {
   // Store state
   const chatProps = useSelector(getGroupChatProps);
   const dispatch = useDispatch();
@@ -108,6 +121,8 @@ const GroupChatBody: React.FC<BodyProps> = ({ conversation, ownId }) => {
     return res;
   }, {} as { [key: string]: { avatar: string; author: string } });
 
+  // Event handlers
+
   function showMembers(): void {
     dispatch(showModal('groupMembers'));
   }
@@ -128,9 +143,10 @@ const GroupChatBody: React.FC<BodyProps> = ({ conversation, ownId }) => {
           const props = {
             ...rest,
             ...membersMap[author],
-            own: ownId === author
+            isOwn: ownId === author,
+            deleteHandler
           };
-          return <GroupMessage {...props} key={key} />;
+          return <Message {...props} key={key} />;
         })}
       </section>
     </>

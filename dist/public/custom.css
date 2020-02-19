@@ -60,9 +60,8 @@
   background-color: #CFD8DC;
 }
 .chat-body {
-  padding: 0;
-  padding-right: 0.5rem;
-  margin: 0.75rem 0;
+  padding: 1.5rem 0.5rem;
+  margin-bottom: 0.75rem;
 }
 .is-wrap {
   overflow-wrap: anywhere;

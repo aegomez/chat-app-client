@@ -12,15 +12,17 @@ const Welcome: React.FC = () => {
   const avatar = useTypedSelector(state => state.profile.avatar);
 
   return (
-    <section className="section">
-      <div className="container content has-text-centered">
-        <h2 className="title">{m.title + name}</h2>
-        <figure className="image is-128x128  is-inline-block">
-          <img src={avatar} alt="Avatar" className="is-rounded" />
-        </figure>
-        <h4 className="subtitle">{m.subtitle}</h4>
-      </div>
-    </section>
+    <div className="column has-background-white-bis is-flex-column">
+      <section className="section">
+        <div className="container content has-text-centered">
+          <h2 className="title">{m.title + name}</h2>
+          <figure className="image is-128x128  is-inline-block">
+            <img src={avatar} alt="Avatar" className="is-rounded" />
+          </figure>
+          <h4 className="subtitle">{m.subtitle}</h4>
+        </div>
+      </section>
+    </div>
   );
 };
 

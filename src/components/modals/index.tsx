@@ -8,6 +8,7 @@ import { GroupMembers } from './groupMembers';
 import { Invitations } from './invitations';
 import { LoadingProfile } from './loadingProfile';
 import { Logout } from './logout';
+import { Modal } from './modal';
 import { Settings } from './settings';
 
 const ModalManager: React.FC = () => {
@@ -36,4 +37,4 @@ const ModalManager: React.FC = () => {
   }
 };
 
-export { ModalManager };
+export { ModalManager, Modal, LoadingProfile };
