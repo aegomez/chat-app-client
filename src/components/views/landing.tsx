@@ -19,7 +19,12 @@ const Landing: React.FC = () => (
         </div>
       </div>
       <div className="column">
-        <figure className="image is-square has-background-dark"></figure>
+        <figure className="image has-background-dark">
+          <img
+            src="https://res.cloudinary.com/nonamechat/image/upload/q_auto/v1582247412/a35dzp9bvgyg0j8dygq5.jpg"
+            alt="Cover image"
+          />
+        </figure>
       </div>
     </section>
   </main>

@@ -22,6 +22,9 @@ const config = {
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
+        include: [
+          path.join(__dirname, 'src')
+        ],
         options: {
           transpileOnly: true
         }

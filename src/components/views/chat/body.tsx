@@ -51,7 +51,7 @@ const ChatBody: React.FC<BodyProps> = ({
 
   // If last message is not own:
   // mark all messages in conv as seen.
-  const unseen = messages[messages.length - 1]._id !== ownId;
+  const unseen = messages[messages.length - 1]?._id !== ownId;
 
   if (unseen) {
     dispatch(
