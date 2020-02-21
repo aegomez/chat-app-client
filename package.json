@@ -1,6 +1,6 @@
 {
   "name": "chat-app-client",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "description": "The frontend for the chat application (name pending).",
   "main": "public/index.js",
